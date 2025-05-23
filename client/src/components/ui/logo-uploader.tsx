@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Upload, Image, X, Check } from "lucide-react";
+import { Upload, Image, X, Check, Building2, Star, Smartphone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,16 +10,25 @@ interface LogoUploaderProps {
   className?: string;
 }
 
-interface UploadedFile {
+interface BrandAsset {
   file: File;
   preview: string;
-  type: 'logo' | 'favicon' | 'app-icon';
+  name: string;
 }
 
 export function LogoUploader({ onLogoUpload, className }: LogoUploaderProps) {
-  const [dragActive, setDragActive] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState<{[key: string]: boolean}>({});
+  const [brandAssets, setBrandAssets] = useState<{
+    logo?: BrandAsset;
+    favicon?: BrandAsset;
+    'app-icon'?: BrandAsset;
+  }>({});
+  
+  const fileInputRefs = {
+    logo: useRef<HTMLInputElement>(null),
+    favicon: useRef<HTMLInputElement>(null),
+    'app-icon': useRef<HTMLInputElement>(null)
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();

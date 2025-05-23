@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { LogoUploader } from "@/components/ui/logo-uploader";
+import { BrandAssetUploader } from "@/components/ui/brand-asset-uploader";
 import { Save, Plus, Trash2, User, Image } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -161,9 +161,9 @@ export default function Settings() {
         </Card>
 
         {/* Brand Assets */}
-        <LogoUploader 
-          onLogoUpload={(file, type) => {
-            // Handle logo upload
+        <BrandAssetUploader 
+          onAssetUpload={(file, type) => {
+            // Handle asset upload
             console.log(`Uploaded ${type}:`, file.name);
             toast({
               title: "Brand Asset Uploaded",

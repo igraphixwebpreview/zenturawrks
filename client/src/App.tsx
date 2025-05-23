@@ -27,6 +27,8 @@ import NotFound from "@/pages/not-found";
 function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [, setLocation] = useLocation();
+  const isMobile = useIsMobile();
 
   return (
     <div className="flex h-screen bg-background">
@@ -38,31 +40,55 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         />
       )}
       
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out md:relative md:translate-x-0`}>
-        <Sidebar 
-          collapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-      </div>
+      {/* Sidebar - Hidden on mobile */}
+      {!isMobile && (
+        <div className="relative">
+          <Sidebar 
+            collapsed={sidebarCollapsed}
+            onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          />
+        </div>
+      )}
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile header */}
-        <div className="flex h-16 items-center px-4 border-b border-border md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebarOpen(true)}
-            className="mr-2"
-          >
-            <Menu className="h-4 w-4" />
-          </Button>
-          <h1 className="text-lg font-semibold">Invoice Generator</h1>
+        {/* Modern header with gradient */}
+        <div className="flex h-16 items-center justify-between px-4 md:px-8 border-b border-border/50 bg-gradient-to-r from-background via-background to-accent/20">
+          {/* Left side - Mobile menu or logo */}
+          <div className="flex items-center gap-4">
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen(true)}
+                className="btn-modern"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            )}
+            <h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              Invoice Generator
+            </h1>
+          </div>
+
+          {/* Right side - Theme customizer and actions */}
+          <div className="flex items-center gap-3">
+            <ThemeCustomizer />
+            {!isMobile && (
+              <Button 
+                onClick={() => setLocation('/create-invoice')}
+                className="btn-modern btn-primary"
+                size="sm"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Invoice
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+        {/* Page content with mobile padding */}
+        <main className={`flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'p-4 pb-24' : 'p-4 md:p-8'}`}>
           {children}
         </main>
       </div>
@@ -72,18 +98,31 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
 function AuthenticatedApp() {
   return (
-    <AppLayout>
-      <Switch>
-        <Route path="/" component={Dashboard} />
-        <Route path="/create-invoice" component={CreateInvoice} />
-        <Route path="/invoices" component={Invoices} />
-        <Route path="/templates" component={Templates} />
-        <Route path="/export" component={Export} />
-        <Route path="/reminders" component={Reminders} />
-        <Route path="/settings" component={Settings} />
-        <Route component={NotFound} />
-      </Switch>
-    </AppLayout>
+    <>
+      <AppLayout>
+        <Switch>
+          <Route path="/" component={Dashboard} />
+          <Route path="/create-invoice" component={CreateInvoice} />
+          <Route path="/invoices" component={Invoices} />
+          <Route path="/templates" component={Templates} />
+          <Route path="/export" component={Export} />
+          <Route path="/reminders" component={Reminders} />
+          <Route path="/settings" component={Settings} />
+          <Route component={NotFound} />
+        </Switch>
+      </AppLayout>
+      
+      {/* Beautiful Mobile Navigation */}
+      <MobileNav />
+      
+      {/* Floating Action Button for Quick Invoice Creation */}
+      <button 
+        className="fab md:hidden"
+        onClick={() => window.location.href = '/create-invoice'}
+      >
+        <Plus className="w-6 h-6" />
+      </button>
+    </>
   );
 }
 

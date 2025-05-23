@@ -61,6 +61,17 @@ export class MemStorage implements IStorage {
     this.currentInvoiceId = 1;
     this.currentTemplateId = 1;
     
+    // Create demo user account
+    const demoUser: User = {
+      id: 1,
+      email: "demo@invoicegen.com",
+      firebaseUid: "demo-uid",
+      isAdmin: true,
+      createdAt: new Date(),
+    };
+    this.users.set(1, demoUser);
+    this.currentUserId = 2;
+    
     // Initialize default settings
     this.settings = {
       id: 1,
@@ -69,7 +80,7 @@ export class MemStorage implements IStorage {
       companyPhone: "+1 (555) 123-4567",
       companyEmail: "info@igraphix.com",
       invoicePrefix: "INV-",
-      nextInvoiceNumber: 1,
+      nextInvoiceNumber: 4,
       defaultVat: "20.00",
       paymentTerms: 30,
       updatedAt: new Date(),
@@ -100,6 +111,144 @@ iGraphix Marketing & Co.`,
     };
     
     this.emailTemplates.set(defaultTemplate.id, defaultTemplate);
+    
+    // Add sample invoices for demo account
+    this.createDemoInvoices();
+  }
+
+  private createDemoInvoices() {
+    const demoUserId = 1;
+    
+    // Sample Invoice 1 - Paid
+    const invoice1: Invoice = {
+      id: 1,
+      userId: demoUserId,
+      invoiceNumber: "INV-001",
+      clientName: "ABC Corporation",
+      clientEmail: "billing@abccorp.com",
+      companyName: "ABC Corporation",
+      addressLine1: "456 Corporate Blvd",
+      city: "Business City",
+      country: "United States",
+      clientPhone: "+1 (555) 987-6543",
+      invoiceDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+      dueDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+      items: JSON.stringify([
+        {
+          name: "Website Design",
+          description: "Custom responsive website design",
+          quantity: 1,
+          rate: 2500.00,
+          amount: 2500.00
+        },
+        {
+          name: "Logo Design",
+          description: "Brand identity and logo package",
+          quantity: 1,
+          rate: 800.00,
+          amount: 800.00
+        }
+      ]),
+      subtotal: "3300.00",
+      discount: "10",
+      vat: "20",
+      deposit: "0",
+      total: "3564.00",
+      status: "paid",
+      notes: "Thank you for choosing iGraphix Marketing & Co. for your design needs!",
+      sentAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+    };
+
+    // Sample Invoice 2 - Sent (Awaiting Payment)
+    const invoice2: Invoice = {
+      id: 2,
+      userId: demoUserId,
+      invoiceNumber: "INV-002",
+      clientName: "Tech Startup Inc",
+      clientEmail: "finance@techstartup.com",
+      companyName: "Tech Startup Inc",
+      addressLine1: "789 Innovation Drive",
+      city: "Tech Valley",
+      country: "United States",
+      clientPhone: "+1 (555) 555-0123",
+      invoiceDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+      dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
+      items: JSON.stringify([
+        {
+          name: "Social Media Management",
+          description: "Monthly social media strategy and content creation",
+          quantity: 3,
+          rate: 1200.00,
+          amount: 3600.00
+        },
+        {
+          name: "Digital Marketing Consultation",
+          description: "Strategic planning session and market analysis",
+          quantity: 2,
+          rate: 450.00,
+          amount: 900.00
+        }
+      ]),
+      subtotal: "4500.00",
+      discount: "5",
+      vat: "20",
+      deposit: "0",
+      total: "5130.00",
+      status: "sent",
+      notes: "Payment terms: Net 30 days. Thank you for your business!",
+      sentAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+    };
+
+    // Sample Invoice 3 - Draft
+    const invoice3: Invoice = {
+      id: 3,
+      userId: demoUserId,
+      invoiceNumber: "INV-003",
+      clientName: "Local Restaurant",
+      clientEmail: "owner@localrestaurant.com",
+      companyName: "Local Restaurant",
+      addressLine1: "123 Main Street",
+      city: "Downtown",
+      country: "United States",
+      clientPhone: "+1 (555) 123-7890",
+      invoiceDate: new Date(),
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      items: JSON.stringify([
+        {
+          name: "Menu Design",
+          description: "Complete menu redesign with printing setup",
+          quantity: 1,
+          rate: 850.00,
+          amount: 850.00
+        },
+        {
+          name: "Business Card Design",
+          description: "Professional business card design",
+          quantity: 1,
+          rate: 250.00,
+          amount: 250.00
+        }
+      ]),
+      subtotal: "1100.00",
+      discount: "0",
+      vat: "20",
+      deposit: "300",
+      total: "1020.00",
+      status: "draft",
+      notes: "Project includes 3 revision rounds. Deposit required before work begins.",
+      sentAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    this.invoices.set(1, invoice1);
+    this.invoices.set(2, invoice2);
+    this.invoices.set(3, invoice3);
+    this.currentInvoiceId = 4;
   }
 
   async getUser(id: number): Promise<User | undefined> {

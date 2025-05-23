@@ -139,7 +139,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 }
 
 function AuthenticatedApp() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   
   return (
     <>
@@ -174,12 +174,15 @@ function AuthenticatedApp() {
       <MobileNav />
       
       {/* Floating Action Button for Quick Invoice Creation */}
-      <button 
+      <motion.button 
         className="fab md:hidden"
-        onClick={() => window.location.href = '/create-invoice'}
+        onClick={() => setLocation('/create-invoice')}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
       >
         <Plus className="w-6 h-6" />
-      </button>
+      </motion.button>
     </>
   );
 }

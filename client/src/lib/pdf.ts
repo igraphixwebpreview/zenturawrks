@@ -10,7 +10,7 @@ export interface InvoiceItem {
   amount: number;
 }
 
-export const generateInvoicePDF = async (invoice: Invoice, companyInfo: any): Promise<Blob> => {
+export const generateInvoicePDF = async (invoice: Invoice, companyInfo?: any): Promise<Blob> => {
   try {
     // Prepare invoice data for Word template processing
     const invoiceData = {

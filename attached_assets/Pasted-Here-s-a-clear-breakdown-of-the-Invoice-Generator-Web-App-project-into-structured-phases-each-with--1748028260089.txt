@@ -1,0 +1,121 @@
+Here’s a clear breakdown of the Invoice Generator Web App project into structured phases, each with specific goals and deliverables. This phased approach ensures logical progression and easier development management.
+
+⸻
+
+🔹 Phase 1: Project Setup & Authentication
+
+Goals:
+	•	Set up the project repository and environments.
+	•	Implement secure admin login/logout functionality.
+
+Tasks:
+	•	Initialize GitHub repository.
+	•	Configure Firebase project.
+	•	Implement Firebase Authentication (email/password).
+	•	Create basic frontend UI with login/logout.
+	•	Admin-only access to the dashboard.
+
+Deliverables:
+	•	Working login system for admins.
+	•	Firebase connected and tested.
+
+⸻
+
+🔹 Phase 2: Invoice Generator Core Features
+
+Goals:
+	•	Build the invoice creation tool.
+
+Tasks:
+	•	Create invoice form: input client details, items, rates, quantities.
+	•	Add dropdown to choose invoice type (Quotation, Final Invoice, Receipt, etc.).
+	•	Perform calculations (subtotal, discount, VAT, deposit, total).
+	•	Display live preview of invoice data.
+
+Deliverables:
+	•	Fully functional invoice creation form.
+	•	Calculation engine tested.
+
+⸻
+
+🔹 Phase 3: PDF Generation & Templates
+
+Goals:
+	•	Allow invoices to be downloaded as PDFs using templates.
+
+Tasks:
+	•	Design professional invoice PDF layout using HTML or Word template.
+	•	Integrate PDF generation tool (e.g., jsPDF, wkhtmltopdf).
+	•	Automatically populate the PDF from form data.
+
+Deliverables:
+	•	Downloadable PDF that matches template design.
+
+⸻
+
+🔹 Phase 4: Email Automation
+
+Goals:
+	•	Automate invoice emailing to clients.
+
+Tasks:
+	•	Integrate SendGrid or SMTP with Firebase Functions.
+	•	Create and store editable email templates (subject + body).
+	•	Allow invoices to be emailed with PDF attachment.
+	•	Option to re-send invoices.
+
+Deliverables:
+	•	Emails with attached PDFs sent to client addresses.
+	•	Email template editor for admins.
+
+⸻
+
+🔹 Phase 5: Admin Dashboard & Invoice Management
+
+Goals:
+	•	Enable admins to view, filter, and manage invoices.
+
+Tasks:
+	•	Build dashboard to view total invoices, income, outstanding, etc.
+	•	Integrate charts for financial overview (e.g., Chart.js).
+	•	Implement invoice history table with filters (status, type, date).
+	•	Enable view/download/re-send functionality for past invoices.
+
+Deliverables:
+	•	Fully functional admin dashboard with data analytics and invoice controls.
+
+⸻
+
+🔹 Phase 6: Enhancements & Reporting
+
+Goals:
+	•	Add quality-of-life features for scalability and business insight.
+
+Tasks:
+	•	Allow exporting invoices to Excel/CSV.
+	•	Implement reminders for overdue invoices.
+	•	Create reports (monthly, quarterly).
+	•	Add optional note fields and internal tags.
+
+Deliverables:
+	•	Report generator and export tools.
+
+⸻
+
+🔹 Phase 7 (Optional): Client Portal & Payments
+
+Goals:
+	•	Provide a portal for clients to view and pay invoices.
+
+Tasks:
+	•	Create a read-only client interface (invoice history, payment status).
+	•	Integrate payment gateways (Stripe, PayPal).
+	•	Add confirmation receipts after payments.
+
+Deliverables:
+	•	Client login portal.
+	•	Online payment functionality.
+
+⸻
+
+Would you like this phased plan turned into a downloadable PDF too?

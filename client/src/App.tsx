@@ -130,8 +130,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Page content with mobile padding */}
-        <main className={`flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'p-4 pb-24' : 'p-4 md:p-8'}`}>
-          <div className="max-w-6xl mx-auto w-full">
+        <main className={`flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'p-2 pb-24' : 'p-4 md:p-8'}`}>
+          <div className={`${isMobile ? 'w-full max-w-none' : 'max-w-6xl'} mx-auto`}>
             {children}
           </div>
         </main>

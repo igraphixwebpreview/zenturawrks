@@ -75,19 +75,6 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuItem onClick={() => setLocation('/')}>
-                    <Home className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLocation('/invoices')}>
-                    <FileText className="mr-2 h-4 w-4" />
-                    All Invoices
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLocation('/create-invoice')}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Invoice
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => setLocation('/reminders')}>
                     <Bell className="mr-2 h-4 w-4" />
                     Reminders
@@ -96,11 +83,6 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                     <Mail className="mr-2 h-4 w-4" />
                     Email Templates
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLocation('/export')}>
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    Export Data
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => setLocation('/settings')}>
                     <SettingsIcon className="mr-2 h-4 w-4" />
                     Settings

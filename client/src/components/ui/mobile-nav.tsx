@@ -20,24 +20,9 @@ const navItems = [
     label: "Create",
   },
   {
-    href: "/reminders",
-    icon: Bell,
-    label: "Reminders",
-  },
-  {
-    href: "/templates",
-    icon: Mail,
-    label: "Templates",
-  },
-  {
     href: "/export",
     icon: BarChart3,
     label: "Export",
-  },
-  {
-    href: "/settings",
-    icon: Settings,
-    label: "Settings",
   },
 ];
 

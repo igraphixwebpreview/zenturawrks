@@ -27,24 +27,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setFirebaseUser(firebaseUser);
-      
-      if (firebaseUser) {
-        try {
-          await registerUser(firebaseUser);
-          queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
-        } catch (error) {
-          console.error("Error registering user:", error);
-        }
-      } else {
-        queryClient.clear();
-      }
-      
+    // For demo mode without Firebase, create a mock user
+    const mockUser = {
+      id: 1,
+      email: "admin@demo.com",
+      firebaseUid: "demo-uid",
+      isAdmin: true,
+      createdAt: new Date(),
+    };
+    
+    // Simulate loading time
+    setTimeout(() => {
+      setFirebaseUser({ uid: "demo-uid", email: "admin@demo.com" } as any);
       setLoading(false);
-    });
-
-    return unsubscribe;
+    }, 1000);
   }, [queryClient]);
 
   const handleSignIn = async (email: string, password: string) => {

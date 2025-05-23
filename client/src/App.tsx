@@ -9,7 +9,7 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { ThemeCustomizer } from "@/components/ui/theme-customizer";
 import { Button } from "@/components/ui/button";
-import { Menu, Plus, Home, FileText, Bell, Mail, BarChart3, Settings as SettingsIcon } from "lucide-react";
+import { Menu, Plus, Home, FileText, Bell, Mail, BarChart3, Settings as SettingsIcon, Zap, Send, Download, Layers } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLocation } from "wouter";
 import {
@@ -75,6 +75,23 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuItem onClick={() => setLocation('/create-invoice')}>
+                    <Zap className="mr-2 h-4 w-4" />
+                    Quick Invoice
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/reminders')}>
+                    <Send className="mr-2 h-4 w-4" />
+                    Bulk Email
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/export')}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Export Report
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/templates')}>
+                    <Layers className="mr-2 h-4 w-4" />
+                    Templates
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => setLocation('/reminders')}>
                     <Bell className="mr-2 h-4 w-4" />
                     Reminders

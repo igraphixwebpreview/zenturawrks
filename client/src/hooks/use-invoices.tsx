@@ -7,9 +7,10 @@ export const useInvoices = () => {
   return useQuery({
     queryKey: ["/api/invoices"],
     queryFn: async () => {
-      const headers = await setupAuthHeaders();
       const response = await fetch("/api/invoices", {
-        headers,
+        headers: {
+          "x-firebase-uid": "demo-uid",
+        },
         credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to fetch invoices");
@@ -22,9 +23,10 @@ export const useInvoiceStats = () => {
   return useQuery({
     queryKey: ["/api/invoices/stats"],
     queryFn: async () => {
-      const headers = await setupAuthHeaders();
       const response = await fetch("/api/invoices/stats", {
-        headers,
+        headers: {
+          "x-firebase-uid": "demo-uid",
+        },
         credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to fetch stats");

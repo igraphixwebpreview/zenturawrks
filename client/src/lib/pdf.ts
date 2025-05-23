@@ -222,3 +222,20 @@ export const downloadPDF = (blob: Blob, filename: string): void => {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
+
+export const previewPDF = (blob: Blob): void => {
+  const url = URL.createObjectURL(blob);
+  // Open PDF in new tab for preview
+  const newWindow = window.open(url, '_blank');
+  if (!newWindow) {
+    // Fallback: download if popup blocked
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "invoice-preview.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  // Clean up URL after a delay
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};

@@ -50,6 +50,11 @@ const navigationItems = [
     icon: Download,
   },
   {
+    title: "Reminders",
+    href: "/reminders",
+    icon: Clock,
+  },
+  {
     title: "Settings",
     href: "/settings",
     icon: Settings,

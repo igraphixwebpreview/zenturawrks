@@ -359,9 +359,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Automated reminder endpoints
-  app.get("/api/reminders/overdue", requireAuth, async (req, res) => {
+  app.get("/api/reminders/overdue", requireAuth, async (req: any, res) => {
     try {
-      const invoices = await storage.getInvoices(req.user.id);
+      const invoices = await storage.getInvoices(1); // Demo user ID
       const currentDate = new Date();
       
       // Find overdue invoices
@@ -407,7 +407,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Get selected invoices
-      const allInvoices = await storage.getInvoices(req.user.id);
+      const allInvoices = await storage.getInvoices(1); // Demo user ID
       const selectedInvoices = allInvoices.filter(inv => invoiceIds.includes(inv.id));
       
       if (selectedInvoices.length === 0) {

@@ -179,20 +179,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Invoice not found" });
       }
 
-      // This would integrate with PDF generation and email sending
-      // For now, just update the status
-      await storage.updateInvoice(id, { 
-        status: "sent", 
-        sentAt: new Date() 
-      }, req.user.id);
+      // Get default email template
+      const template = await storage.getDefaultEmailTemplate();
+      
+      // Prepare email data
+      const emailData = {
+        client_name: invoice.clientName,
+        invoice_number: invoice.invoiceNumber,
+        invoice_date: new Date(invoice.invoiceDate).toLocaleDateString(),
+        due_date: new Date(invoice.dueDate).toLocaleDateString(),
+        total_amount: `$${parseFloat(invoice.total).toFixed(2)}`,
+        company_name: invoice.companyName || "",
+      };
+
+      // Replace template variables
+      const subject = customSubject || (template?.subject.replace(/{(\w+)}/g, (match, key) => 
+        (emailData as any)[key] || match) || `Invoice ${invoice.invoiceNumber}`);
+      
+      const body = customBody || (template?.body.replace(/{(\w+)}/g, (match, key) => 
+        (emailData as any)[key] || match) || `Please find attached invoice ${invoice.invoiceNumber}.`);
+
+      if (action === "email" || action === "both") {
+        // Update status first
+        await storage.updateInvoice(id, { 
+          status: "sent", 
+          sentAt: new Date() 
+        }, req.user.id);
+      }
 
       res.json({ 
         message: "Invoice processed successfully",
         action,
-        invoiceId: id 
+        invoiceId: id,
+        emailData: action === "email" || action === "both" ? {
+          to: invoice.clientEmail,
+          subject,
+          body
+        } : undefined
       });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
+    }
+  });
+
+  // New endpoint for sending emails via Python SMTP
+  app.post("/api/email/send", requireAuth, async (req: any, res) => {
+    try {
+      const { to_email, subject, body, pdf_data } = req.body;
+      
+      // In a real implementation, you would:
+      // 1. Save PDF data to temporary file
+      // 2. Call Python email service
+      // 3. Clean up temporary file
+      
+      res.json({ 
+        message: "Email functionality ready",
+        instructions: "Please configure SMTP settings to enable email sending"
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
   });
 

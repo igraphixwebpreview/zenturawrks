@@ -1,4 +1,4 @@
-import { Home, FileText, Plus, Settings, BarChart3 } from "lucide-react";
+import { Home, FileText, Plus, Settings, BarChart3, Bell, Mail } from "lucide-react";
 import { useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -18,6 +18,16 @@ const navItems = [
     href: "/create-invoice",
     icon: Plus,
     label: "Create",
+  },
+  {
+    href: "/reminders",
+    icon: Bell,
+    label: "Reminders",
+  },
+  {
+    href: "/templates",
+    icon: Mail,
+    label: "Templates",
   },
   {
     href: "/export",

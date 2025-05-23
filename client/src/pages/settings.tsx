@@ -69,6 +69,14 @@ export default function Settings() {
         description: "Your settings have been saved successfully.",
       });
     },
+    onError: (error: any) => {
+      console.error("Settings save error:", error);
+      toast({
+        title: "Save failed",
+        description: error.message || "Failed to save settings. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const form = useForm<SettingsForm>({

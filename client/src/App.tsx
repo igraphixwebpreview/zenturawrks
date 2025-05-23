@@ -15,6 +15,7 @@ import CreateInvoice from "@/pages/create-invoice";
 import Invoices from "@/pages/invoices";
 import Templates from "@/pages/templates";
 import Settings from "@/pages/settings";
+import Export from "@/pages/export";
 import Login from "@/pages/login";
 import NotFound from "@/pages/not-found";
 

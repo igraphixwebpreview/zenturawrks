@@ -257,6 +257,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Accounting software export endpoints
+  app.get("/api/export/formats", requireAuth, async (req, res) => {
+    try {
+      const formats = [
+        {
+          id: 'quickbooks_iif',
+          name: 'QuickBooks',
+          description: 'Export to QuickBooks IIF format',
+          fileExtension: '.iif',
+          icon: 'Building2'
+        },
+        {
+          id: 'xero_csv',
+          name: 'Xero',
+          description: 'Export to Xero CSV format',
+          fileExtension: '.csv',
+          icon: 'FileSpreadsheet'
+        },
+        {
+          id: 'sage_csv',
+          name: 'Sage',
+          description: 'Export to Sage CSV format',
+          fileExtension: '.csv',
+          icon: 'Calculator'
+        },
+        {
+          id: 'wave_csv',
+          name: 'Wave Accounting',
+          description: 'Export to Wave CSV format',
+          fileExtension: '.csv',
+          icon: 'Waves'
+        },
+        {
+          id: 'freshbooks_csv',
+          name: 'FreshBooks',
+          description: 'Export to FreshBooks CSV format',
+          fileExtension: '.csv',
+          icon: 'BookOpen'
+        },
+        {
+          id: 'generic_csv',
+          name: 'Generic CSV',
+          description: 'Export to generic CSV format',
+          fileExtension: '.csv',
+          icon: 'Download'
+        }
+      ];
+      
+      res.json(formats);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/export/invoices", requireAuth, async (req: any, res) => {
+    try {
+      const { format, dateRange, status } = req.body;
+      
+      // Get invoices based on filters
+      let invoices = await storage.getInvoices(req.user.id);
+      
+      // Apply filters
+      if (status && status !== 'all') {
+        invoices = invoices.filter(inv => inv.status === status);
+      }
+      
+      if (dateRange) {
+        const startDate = new Date(dateRange.start);
+        const endDate = new Date(dateRange.end);
+        invoices = invoices.filter(inv => {
+          const invDate = new Date(inv.invoiceDate);
+          return invDate >= startDate && invDate <= endDate;
+        });
+      }
+      
+      if (invoices.length === 0) {
+        return res.json({
+          success: false,
+          message: "No invoices found matching the selected criteria"
+        });
+      }
+      
+      // For now, return export info (Python processor integration would go here)
+      res.json({
+        success: true,
+        message: `Ready to export ${invoices.length} invoices to ${format}`,
+        count: invoices.length,
+        format: format,
+        invoices: invoices.map(inv => ({
+          id: inv.id,
+          invoiceNumber: inv.invoiceNumber,
+          clientName: inv.clientName,
+          total: inv.total,
+          status: inv.status
+        }))
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Email template routes
   app.get("/api/email-templates", requireAuth, async (req, res) => {
     try {

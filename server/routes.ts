@@ -245,15 +245,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/pdf/generate", requireAuth, async (req: any, res) => {
     try {
       const { invoice_data, template } = req.body;
+      const { spawn } = require('child_process');
       
-      // For now, return a message about template setup
-      res.json({
-        success: false,
-        message: "Word template system is ready! Please add your .docx templates to the 'templates' folder.",
-        template_instructions: "Create 'default_invoice.docx' in the templates folder with your design"
+      // Call Python template processor
+      const python = spawn('python3', ['server/template_processor.py'], {
+        stdio: ['pipe', 'pipe', 'pipe']
       });
+      
+      // Send invoice data to Python script
+      python.stdin.write(JSON.stringify({
+        invoice_data,
+        template_name: template || 'default_invoice.docx'
+      }));
+      python.stdin.end();
+      
+      let pdfData = '';
+      let errorData = '';
+      
+      python.stdout.on('data', (data) => {
+        pdfData += data.toString();
+      });
+      
+      python.stderr.on('data', (data) => {
+        errorData += data.toString();
+      });
+      
+      python.on('close', (code) => {
+        if (code === 0 && pdfData) {
+          try {
+            const result = JSON.parse(pdfData);
+            if (result.success) {
+              res.json({
+                success: true,
+                pdf_base64: result.pdf_base64,
+                message: "PDF generated successfully from Word template"
+              });
+            } else {
+              res.status(400).json({
+                success: false,
+                message: result.error || "Template processing failed"
+              });
+            }
+          } catch (parseError) {
+            res.status(500).json({
+              success: false,
+              message: "Invalid response from template processor"
+            });
+          }
+        } else {
+          res.status(500).json({
+            success: false,
+            message: "Template processing failed",
+            error: errorData
+          });
+        }
+      });
+      
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ 
+        success: false,
+        message: error.message 
+      });
     }
   });
 

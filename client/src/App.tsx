@@ -9,9 +9,16 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { ThemeCustomizer } from "@/components/ui/theme-customizer";
 import { Button } from "@/components/ui/button";
-import { Menu, Plus } from "lucide-react";
+import { Menu, Plus, Home, FileText, Bell, Mail, BarChart3, Settings as SettingsIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLocation } from "wouter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Pages
 import Dashboard from "@/pages/dashboard";
@@ -57,14 +64,49 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Left side - Mobile menu or logo */}
           <div className="flex items-center gap-4">
             {isMobile && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarOpen(true)}
-                className="btn-modern"
-              >
-                <Menu className="h-4 w-4" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="btn-modern"
+                  >
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuItem onClick={() => setLocation('/')}>
+                    <Home className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/invoices')}>
+                    <FileText className="mr-2 h-4 w-4" />
+                    All Invoices
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/create-invoice')}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Invoice
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setLocation('/reminders')}>
+                    <Bell className="mr-2 h-4 w-4" />
+                    Reminders
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/templates')}>
+                    <Mail className="mr-2 h-4 w-4" />
+                    Email Templates
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocation('/export')}>
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    Export Data
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setLocation('/settings')}>
+                    <SettingsIcon className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
             <h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               Invoice Generator

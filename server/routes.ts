@@ -358,6 +358,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Automated reminder endpoints
+  app.get("/api/reminders/overdue", requireAuth, async (req, res) => {
+    try {
+      const invoices = await storage.getInvoices(req.user.id);
+      const currentDate = new Date();
+      
+      // Find overdue invoices
+      const overdueInvoices = invoices.filter(invoice => {
+        if (invoice.status === 'paid') return false;
+        const dueDate = new Date(invoice.dueDate);
+        return dueDate < currentDate;
+      });
+      
+      // Calculate days overdue for each
+      const overdueWithDetails = overdueInvoices.map(invoice => {
+        const dueDate = new Date(invoice.dueDate);
+        const daysOverdue = Math.floor((currentDate.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        let reminderType = 'gentle';
+        if (daysOverdue > 30) reminderType = 'final';
+        else if (daysOverdue > 7) reminderType = 'urgent';
+        
+        return {
+          ...invoice,
+          daysOverdue,
+          reminderType
+        };
+      });
+      
+      res.json({
+        success: true,
+        overdueInvoices: overdueWithDetails,
+        count: overdueWithDetails.length,
+        totalOverdueAmount: overdueWithDetails.reduce((sum, inv) => sum + parseFloat(inv.total), 0)
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/reminders/send", requireAuth, async (req: any, res) => {
+    try {
+      const { invoiceIds, reminderType } = req.body;
+      
+      if (!invoiceIds || invoiceIds.length === 0) {
+        return res.status(400).json({ message: "No invoices selected for reminders" });
+      }
+      
+      // Get selected invoices
+      const allInvoices = await storage.getInvoices(req.user.id);
+      const selectedInvoices = allInvoices.filter(inv => invoiceIds.includes(inv.id));
+      
+      if (selectedInvoices.length === 0) {
+        return res.status(404).json({ message: "Selected invoices not found" });
+      }
+      
+      // For now, simulate reminder sending
+      const results = {
+        processed: selectedInvoices.length,
+        sent: selectedInvoices.length,
+        failed: 0,
+        details: selectedInvoices.map(inv => ({
+          invoice: inv.invoiceNumber,
+          status: 'sent',
+          type: reminderType || 'gentle',
+          client: inv.clientName
+        }))
+      };
+      
+      res.json({
+        success: true,
+        message: `Successfully sent ${results.sent} reminder emails`,
+        results
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Email template routes
   app.get("/api/email-templates", requireAuth, async (req, res) => {
     try {

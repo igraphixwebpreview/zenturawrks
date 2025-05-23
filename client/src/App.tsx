@@ -16,6 +16,7 @@ import Invoices from "@/pages/invoices";
 import Templates from "@/pages/templates";
 import Settings from "@/pages/settings";
 import Export from "@/pages/export";
+import Reminders from "@/pages/reminders";
 import Login from "@/pages/login";
 import NotFound from "@/pages/not-found";
 
@@ -74,6 +75,7 @@ function AuthenticatedApp() {
         <Route path="/invoices" component={Invoices} />
         <Route path="/templates" component={Templates} />
         <Route path="/export" component={Export} />
+        <Route path="/reminders" component={Reminders} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>

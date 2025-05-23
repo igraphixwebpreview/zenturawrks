@@ -10,6 +10,7 @@ import {
   Mail, 
   Settings, 
   Download,
+  Clock,
   LogOut,
   ChevronLeft,
   ChevronRight

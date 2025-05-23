@@ -6,8 +6,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { Sidebar } from "@/components/ui/sidebar";
+import { MobileNav } from "@/components/ui/mobile-nav";
+import { ThemeCustomizer } from "@/components/ui/theme-customizer";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Plus } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useLocation } from "wouter";
 
 // Pages
 import Dashboard from "@/pages/dashboard";

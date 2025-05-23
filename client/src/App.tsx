@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Switch, Route } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
@@ -138,19 +139,35 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 }
 
 function AuthenticatedApp() {
+  const [location] = useLocation();
+  
   return (
     <>
       <AppLayout>
-        <Switch>
-          <Route path="/" component={Dashboard} />
-          <Route path="/create-invoice" component={CreateInvoice} />
-          <Route path="/invoices" component={Invoices} />
-          <Route path="/templates" component={Templates} />
-          <Route path="/export" component={Export} />
-          <Route path="/reminders" component={Reminders} />
-          <Route path="/settings" component={Settings} />
-          <Route component={NotFound} />
-        </Switch>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: "easeInOut"
+            }}
+            className="h-full"
+          >
+            <Switch>
+              <Route path="/" component={Dashboard} />
+              <Route path="/create-invoice" component={CreateInvoice} />
+              <Route path="/invoices" component={Invoices} />
+              <Route path="/templates" component={Templates} />
+              <Route path="/export" component={Export} />
+              <Route path="/reminders" component={Reminders} />
+              <Route path="/settings" component={Settings} />
+              <Route component={NotFound} />
+            </Switch>
+          </motion.div>
+        </AnimatePresence>
       </AppLayout>
       
       {/* Beautiful Mobile Navigation */}

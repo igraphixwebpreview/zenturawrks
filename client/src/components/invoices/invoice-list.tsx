@@ -110,9 +110,9 @@ export function InvoiceList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold text-foreground">All Invoices</h1>
-        <Button variant="outline">
+        <Button variant="outline" className="w-full sm:w-auto min-h-10">
           <FileDown className="h-4 w-4 mr-2" />
           Export CSV
         </Button>

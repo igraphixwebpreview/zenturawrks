@@ -201,25 +201,27 @@ export function AccountingExport() {
             {/* Date Range Filter */}
             <div className="space-y-2">
               <Label>Date Range (Optional)</Label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       className={cn(
-                        "justify-start text-left font-normal",
+                        "w-full justify-start text-left font-normal min-h-10 text-sm",
                         !dateRange?.from && "text-muted-foreground"
                       )}
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateRange?.from ? (
-                        format(dateRange.from, "PPP")
-                      ) : (
-                        <span>From date</span>
-                      )}
+                      <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                      <span className="truncate">
+                        {dateRange?.from ? (
+                          format(dateRange.from, "MMM dd, yyyy")
+                        ) : (
+                          "From date"
+                        )}
+                      </span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={dateRange?.from}
@@ -236,16 +238,18 @@ export function AccountingExport() {
                     <Button
                       variant="outline"
                       className={cn(
-                        "justify-start text-left font-normal",
+                        "w-full justify-start text-left font-normal min-h-10 text-sm",
                         !dateRange?.to && "text-muted-foreground"
                       )}
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateRange?.to ? (
-                        format(dateRange.to, "PPP")
-                      ) : (
-                        <span>To date</span>
-                      )}
+                      <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                      <span className="truncate">
+                        {dateRange?.to ? (
+                          format(dateRange.to, "MMM dd, yyyy")
+                        ) : (
+                          "To date"
+                        )}
+                      </span>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -264,11 +268,12 @@ export function AccountingExport() {
           </div>
 
           {/* Export Button */}
-          <div className="flex justify-end">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
             <Button
               onClick={handleExport}
               disabled={!selectedFormat || exportMutation.isPending}
-              className="min-w-32"
+              className="w-full sm:w-auto min-w-32 min-h-10"
+              size="default"
             >
               {exportMutation.isPending ? (
                 "Exporting..."

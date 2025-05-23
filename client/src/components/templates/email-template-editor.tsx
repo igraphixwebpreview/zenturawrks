@@ -165,16 +165,21 @@ iGraphix Marketing & Co.`,
                   )}
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row gap-3 sm:justify-between pt-4">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={resetToDefault}
+                    className="flex-1 sm:flex-none"
                   >
                     <RotateCcw className="h-4 w-4 mr-2" />
                     Reset to Default
                   </Button>
-                  <Button type="submit" disabled={updateTemplate.isPending}>
+                  <Button 
+                    type="submit" 
+                    disabled={updateTemplate.isPending}
+                    className="flex-1 sm:flex-none"
+                  >
                     <Save className="h-4 w-4 mr-2" />
                     {updateTemplate.isPending ? "Saving..." : "Save Template"}
                   </Button>

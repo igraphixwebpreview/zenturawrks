@@ -128,7 +128,7 @@ export function InvoiceForm() {
     }
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     const formData = form.getValues();
     const invoiceData = {
       id: 0,
@@ -151,8 +151,12 @@ export function InvoiceForm() {
       companyAddress: "123 Business Street\nBusiness City, BC 12345\nCountry",
     };
 
-    const pdfBlob = generateInvoicePDF(invoiceData, companyInfo);
-    downloadPDF(pdfBlob, `invoice-preview.pdf`);
+    try {
+      const pdfBlob = await generateInvoicePDF(invoiceData, companyInfo);
+      downloadPDF(pdfBlob, `invoice-preview.pdf`);
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+    }
   };
 
   return (

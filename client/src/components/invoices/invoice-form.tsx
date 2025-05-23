@@ -269,22 +269,30 @@ export function InvoiceForm() {
           <CardContent>
             <div className="space-y-4">
               {watchedItems.map((item, index) => (
-                <div key={index} className="grid grid-cols-12 gap-4 items-end">
-                  <div className="col-span-3 space-y-2">
+                <div key={index} className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end border rounded-lg p-4 bg-muted/30">
+                  <div className="lg:col-span-3 space-y-2">
                     <Label>Item Name</Label>
                     <Input 
                       {...form.register(`items.${index}.name`)}
                       placeholder="Item name"
+                      className="w-full"
                     />
                   </div>
-                  <div className="col-span-3 space-y-2">
+                  <div className="lg:col-span-4 space-y-2">
                     <Label>Description</Label>
-                    <Input 
+                    <Textarea 
                       {...form.register(`items.${index}.description`)}
-                      placeholder="Description"
+                      placeholder="Detailed description of the item or service"
+                      className="min-h-[38px] resize-none"
+                      rows={1}
+                      onInput={(e) => {
+                        const target = e.target as HTMLTextAreaElement;
+                        target.style.height = '38px';
+                        target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+                      }}
                     />
                   </div>
-                  <div className="col-span-2 space-y-2">
+                  <div className="lg:col-span-2 space-y-2">
                     <Label>Rate</Label>
                     <Input 
                       type="number"
@@ -294,9 +302,10 @@ export function InvoiceForm() {
                         onChange: () => updateItemAmount(index)
                       })}
                       placeholder="0.00"
+                      className="w-full"
                     />
                   </div>
-                  <div className="col-span-1 space-y-2">
+                  <div className="lg:col-span-1 space-y-2">
                     <Label>Qty</Label>
                     <Input 
                       type="number"
@@ -305,21 +314,23 @@ export function InvoiceForm() {
                         onChange: () => updateItemAmount(index)
                       })}
                       placeholder="1"
+                      className="w-full min-w-[60px]"
                     />
                   </div>
-                  <div className="col-span-2 space-y-2">
+                  <div className="lg:col-span-1 space-y-2">
                     <Label>Amount</Label>
-                    <div className="text-sm font-medium py-2">
+                    <div className="text-sm font-medium py-2 px-3 bg-background rounded-md border min-h-[38px] flex items-center">
                       ${(item.rate * item.quantity).toFixed(2)}
                     </div>
                   </div>
-                  <div className="col-span-1">
+                  <div className="lg:col-span-1 flex justify-end">
                     <Button
                       type="button"
                       onClick={() => removeItem(index)}
                       variant="outline"
                       size="sm"
                       disabled={watchedItems.length === 1}
+                      className="h-9 w-9 p-0"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

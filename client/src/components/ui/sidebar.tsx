@@ -9,6 +9,7 @@ import {
   FileText, 
   Mail, 
   Settings, 
+  Download,
   LogOut,
   ChevronLeft,
   ChevronRight
@@ -41,6 +42,11 @@ const navigationItems = [
     title: "Email Templates",
     href: "/templates",
     icon: Mail,
+  },
+  {
+    title: "Export Data",
+    href: "/export",
+    icon: Download,
   },
   {
     title: "Settings",

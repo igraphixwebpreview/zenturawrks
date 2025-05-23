@@ -73,6 +73,7 @@ function AuthenticatedApp() {
         <Route path="/create-invoice" component={CreateInvoice} />
         <Route path="/invoices" component={Invoices} />
         <Route path="/templates" component={Templates} />
+        <Route path="/export" component={Export} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>

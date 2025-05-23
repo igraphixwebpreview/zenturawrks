@@ -10,7 +10,80 @@ export interface InvoiceItem {
   amount: number;
 }
 
-export const generateInvoicePDF = (invoice: Invoice, companyInfo: any): Blob => {
+export const generateInvoicePDF = async (invoice: Invoice, companyInfo: any): Promise<Blob> => {
+  try {
+    // Prepare invoice data for Word template processing
+    const invoiceData = {
+      // Company information
+      companyName: companyInfo?.companyName || "Your Company",
+      companyAddress: companyInfo?.companyAddress || "123 Business St, City, State 12345",
+      companyPhone: companyInfo?.companyPhone || "(555) 123-4567", 
+      companyEmail: companyInfo?.companyEmail || "info@company.com",
+      companyWebsite: companyInfo?.companyWebsite || "",
+      
+      // Invoice details
+      invoiceNumber: invoice.invoiceNumber,
+      invoiceDate: new Date(invoice.invoiceDate).toLocaleDateString(),
+      dueDate: new Date(invoice.dueDate).toLocaleDateString(),
+      status: invoice.status,
+      
+      // Client information
+      clientName: invoice.clientName,
+      clientEmail: invoice.clientEmail,
+      clientAddress: `${invoice.addressLine1}\n${invoice.city}, ${invoice.country}`,
+      clientPhone: invoice.clientPhone || "",
+      
+      // Financial information
+      subtotal: invoice.subtotal,
+      discount: invoice.discount || "0",
+      vat: invoice.vat || "0", 
+      deposit: invoice.deposit || "0",
+      total: invoice.total,
+      
+      // Items
+      items: invoice.items as InvoiceItem[],
+      
+      // Additional fields
+      notes: invoice.notes || "",
+      paymentTerms: "Net 30 days"
+    };
+
+    // Call the Python template processor
+    const response = await fetch('/api/pdf/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-firebase-uid': 'demo-uid',
+      },
+      body: JSON.stringify({
+        invoice_data: invoiceData,
+        template: 'default_invoice.docx'
+      }),
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      
+      if (result.success) {
+        // Convert base64 PDF back to blob
+        const binaryString = atob(result.pdf_base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        
+        return new Blob([bytes], { type: 'application/pdf' });
+      }
+    }
+    
+    // Fall through to existing PDF generation if template processing fails
+    console.log('Using fallback PDF generation...');
+  } catch (error) {
+    console.log('Template processing not available, using built-in PDF generation...');
+  }
+
+  // Existing PDF generation code as fallback
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   

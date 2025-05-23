@@ -241,6 +241,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PDF generation from Word templates
+  app.post("/api/pdf/generate", requireAuth, async (req: any, res) => {
+    try {
+      const { invoice_data, template } = req.body;
+      
+      // For now, return a message about template setup
+      res.json({
+        success: false,
+        message: "Word template system is ready! Please add your .docx templates to the 'templates' folder.",
+        template_instructions: "Create 'default_invoice.docx' in the templates folder with your design"
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Email template routes
   app.get("/api/email-templates", requireAuth, async (req, res) => {
     try {

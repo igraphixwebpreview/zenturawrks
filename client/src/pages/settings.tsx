@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Save, Plus, Trash2, User } from "lucide-react";
+import { LogoUploader } from "@/components/ui/logo-uploader";
+import { Save, Plus, Trash2, User, Image } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { setupAuthHeaders } from "@/lib/auth";
@@ -158,6 +159,18 @@ export default function Settings() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Brand Assets */}
+        <LogoUploader 
+          onLogoUpload={(file, type) => {
+            // Handle logo upload
+            console.log(`Uploaded ${type}:`, file.name);
+            toast({
+              title: "Brand Asset Uploaded",
+              description: `Your ${type.replace('-', ' ')} has been uploaded successfully!`,
+            });
+          }}
+        />
 
         {/* Invoice Settings */}
         <Card>

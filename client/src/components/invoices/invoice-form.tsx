@@ -160,12 +160,13 @@ export function InvoiceForm() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-foreground">Create New Invoice</h1>
-      </div>
+    <div className="w-full min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-foreground">Create New Invoice</h1>
+        </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Client Information */}
         <Card>
           <CardHeader>
@@ -422,6 +423,7 @@ export function InvoiceForm() {
           </CardContent>
         </Card>
       </form>
+      </div>
     </div>
   );
 }

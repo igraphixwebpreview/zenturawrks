@@ -86,6 +86,8 @@ export default function Settings() {
   });
 
   const onSubmit = (data: SettingsForm) => {
+    console.log("Form submitted with data:", data);
+    console.log("Form errors:", form.formState.errors);
     updateSettings.mutate(data);
   };
 

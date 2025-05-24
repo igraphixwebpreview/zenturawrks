@@ -231,7 +231,10 @@ export function InvoiceForm() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="invoiceType">Invoice Type *</Label>
-                <Select onValueChange={(value) => form.setValue("invoiceType", value as any)}>
+                <Select 
+                  value={form.watch("invoiceType")}
+                  onValueChange={(value) => form.setValue("invoiceType", value as any)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -244,6 +247,9 @@ export function InvoiceForm() {
                     <SelectItem value="contract_invoice">Contract Invoice</SelectItem>
                   </SelectContent>
                 </Select>
+                {form.formState.errors.invoiceType && (
+                  <p className="text-sm text-destructive">{form.formState.errors.invoiceType.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="invoiceDate">Invoice Date *</Label>

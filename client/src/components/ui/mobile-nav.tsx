@@ -38,7 +38,7 @@ export function MobileNav() {
   if (!isMobile) return null;
 
   return (
-    <nav className="mobile-nav">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/20 border-t border-white/30 rounded-t-3xl px-4 py-3 shadow-2xl">
       <div className="flex justify-around items-center">
         {navItems.map((item) => {
           const Icon = item.icon;

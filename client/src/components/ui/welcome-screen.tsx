@@ -111,7 +111,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
               }}
               className="mt-8"
             >
-              <div className="text-primary font-medium text-lg">
+              <div className="text-black dark:text-white font-medium text-lg">
                 {loadingProgress}%
               </div>
             </motion.div>

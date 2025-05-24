@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { Sidebar } from "@/components/ui/sidebar";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { ThemeCustomizer } from "@/components/ui/theme-customizer";
+import { WelcomeScreen } from "@/components/ui/welcome-screen";
 import { Button } from "@/components/ui/button";
 import { Menu, Plus, Home, FileText, Bell, Mail, BarChart3, Settings as SettingsIcon, Zap, Send, Download, Layers } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -142,6 +143,17 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
 function AuthenticatedApp() {
   const [location, setLocation] = useLocation();
+  const [showWelcome, setShowWelcome] = useState(true);
+  const { user } = useAuth();
+  
+  if (showWelcome) {
+    return (
+      <WelcomeScreen 
+        onComplete={() => setShowWelcome(false)}
+        userEmail={user?.email}
+      />
+    );
+  }
   
   return (
     <>

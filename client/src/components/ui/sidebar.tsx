@@ -87,8 +87,8 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
       <div className="flex h-16 items-center justify-between px-4 border-b border-border">
         {!collapsed && (
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <File className="w-4 h-4 text-primary-foreground" />
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-xs font-bold text-primary-foreground">IG</span>
             </div>
             <div>
               <h1 className="text-lg font-semibold text-foreground">InvoiceGen</h1>
@@ -97,8 +97,8 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
           </div>
         )}
         {collapsed && (
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mx-auto">
-            <File className="w-4 h-4 text-primary-foreground" />
+          <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto shadow-lg">
+            <span className="text-xs font-bold text-primary-foreground">IG</span>
           </div>
         )}
         {onToggle && (

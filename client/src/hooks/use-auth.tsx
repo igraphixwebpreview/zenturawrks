@@ -27,20 +27,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    // For demo mode without Firebase, create a mock user
-    const mockUser = {
-      id: 1,
-      email: "admin@demo.com",
-      firebaseUid: "demo-uid",
-      isAdmin: true,
-      createdAt: new Date(),
-    };
-    
-    // Simulate loading time
-    setTimeout(() => {
-      setFirebaseUser({ uid: "demo-uid", email: "admin@demo.com" } as any);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setFirebaseUser(firebaseUser);
+      
+      if (firebaseUser) {
+        try {
+          // Register user in backend if they don't exist
+          await registerUser(firebaseUser);
+        } catch (error) {
+          console.error("Error registering user:", error);
+        }
+      }
+      
       setLoading(false);
-    }, 1000);
+    });
+
+    return () => unsubscribe();
   }, [queryClient]);
 
   const handleSignIn = async (email: string, password: string) => {

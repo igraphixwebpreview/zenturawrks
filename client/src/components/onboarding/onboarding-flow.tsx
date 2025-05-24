@@ -89,43 +89,19 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-white to-purple-50/20 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950/10" />
       
       <div className="relative w-full max-w-4xl mx-auto px-6 h-full flex flex-col">
-        {/* Header with progress */}
-        <div className="pt-8 pb-6">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-light text-gray-900 dark:text-white mb-2">
-              {t('onboarding.setup.title')}
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400">
-              {t('onboarding.setup.subtitle')}
-            </p>
-            {/* Temporary reset button for testing */}
-            <button 
-              onClick={() => {
-                localStorage.removeItem('onboarding-complete');
-                window.location.reload();
-              }}
-              className="mt-4 text-xs text-gray-400 hover:text-gray-600 transition-colors"
-              style={{ fontSize: '10px' }}
-            >
-              Reset for Testing
-            </button>
-          </div>
-
-          {/* Progress bar */}
-          <div className="w-full max-w-md mx-auto">
-            <div className="flex justify-between text-xs text-gray-500 mb-2">
-              <span>Step {currentStepIndex + 1} of {totalSteps}</span>
-              <span>{Math.round(progressPercentage)}% Complete</span>
-            </div>
-            <div className="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full">
-              <motion.div 
-                className="h-full bg-primary rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercentage}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-            </div>
-          </div>
+        {/* Minimal header */}
+        <div className="pt-4 pb-2">
+          {/* Temporary reset button for testing */}
+          <button 
+            onClick={() => {
+              localStorage.removeItem('onboarding-complete');
+              window.location.reload();
+            }}
+            className="absolute top-4 right-4 text-xs text-gray-400 hover:text-gray-600 transition-colors z-10"
+            style={{ fontSize: '10px' }}
+          >
+            Reset
+          </button>
         </div>
 
         {/* Step content */}

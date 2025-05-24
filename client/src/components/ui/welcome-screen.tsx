@@ -12,6 +12,25 @@ interface WelcomeScreenProps {
 export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo }: WelcomeScreenProps) {
   const [isComplete, setIsComplete] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentTheme, setCurrentTheme] = useState("theme-purple");
+
+  // Theme color mapping
+  const themeColors = {
+    "theme-purple": "#7C3AED",
+    "theme-blue": "#3B82F6", 
+    "theme-emerald": "#10B981",
+    "theme-rose": "#F43F5E",
+    "theme-orange": "#F97316",
+    "theme-pink": "#EC4899",
+    "theme-indigo": "#6366F1",
+    "theme-cyan": "#06B6D4"
+  };
+
+  useEffect(() => {
+    // Load current theme from localStorage
+    const savedTheme = localStorage.getItem("invoice-theme") || "theme-purple";
+    setCurrentTheme(savedTheme);
+  }, []);
 
   useEffect(() => {
     // Animate progress from 0 to 100
@@ -105,9 +124,9 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
               {/* Simple progress bar */}
               <div className="w-48 h-1 bg-gray-200 dark:bg-gray-800 rounded-full mb-4">
                 <motion.div 
-                  className="h-full bg-primary rounded-full"
+                  className="h-full rounded-full"
                   style={{
-                    background: `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.8))`
+                    background: `linear-gradient(90deg, ${themeColors[currentTheme as keyof typeof themeColors]}, ${themeColors[currentTheme as keyof typeof themeColors]}80)`
                   }}
                   initial={{ width: 0 }}
                   animate={{ width: `${loadingProgress}%` }}

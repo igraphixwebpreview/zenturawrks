@@ -24,12 +24,7 @@ export const useCreateClient = () => {
 
   return useMutation({
     mutationFn: async (client: InsertClient) => {
-      return apiRequest({
-        url: "/api/clients",
-        method: "POST",
-        body: client,
-        on401: "throw",
-      });
+      return apiRequest("/api/clients", "POST", client);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
@@ -54,12 +49,7 @@ export const useUpdateClient = () => {
 
   return useMutation({
     mutationFn: async ({ id, client }: { id: number; client: Partial<Client> }) => {
-      return apiRequest({
-        url: `/api/clients/${id}`,
-        method: "PATCH",
-        body: client,
-        on401: "throw",
-      });
+      return apiRequest(`/api/clients/${id}`, "PATCH", client);
     },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
@@ -85,11 +75,7 @@ export const useDeleteClient = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest({
-        url: `/api/clients/${id}`,
-        method: "DELETE",
-        on401: "throw",
-      });
+      return apiRequest(`/api/clients/${id}`, "DELETE");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });

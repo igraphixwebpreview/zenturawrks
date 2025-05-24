@@ -144,6 +144,15 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 New Invoice
               </Button>
             )}
+            <Button
+              onClick={signOut}
+              variant="ghost"
+              size="sm"
+              className="btn-modern"
+              title={`Sign out ${user?.email || ''}`}
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 
@@ -232,7 +241,23 @@ function AuthenticatedApp() {
 }
 
 function AppContent() {
-  // Skip authentication for demo mode - go straight to the app
+  const { firebaseUser, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 via-background to-secondary/20">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!firebaseUser) {
+    return <LoginForm />;
+  }
+
   return <AuthenticatedApp />;
 }
 

@@ -309,6 +309,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Quick export endpoint for immediate downloads
+  app.post("/api/export/quick", requireAuth, async (req, res) => {
+    try {
+      const { format, status = "all" } = req.body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
+      // Get all invoices for the user
+      const invoices = await storage.getInvoices(userId);
+      
+      // Filter by status if specified
+      const filteredInvoices = status === "all" 
+        ? invoices 
+        : invoices.filter(invoice => invoice.status === status);
+
+      if (filteredInvoices.length === 0) {
+        return res.json({
+          success: false,
+          message: "No invoices found for export"
+        });
+      }
+
+      // Convert to export format
+      const exportData = filteredInvoices.map(invoice => ({
+        invoice_number: invoice.invoiceNumber,
+        client_name: invoice.clientName,
+        client_email: invoice.clientEmail,
+        invoice_date: invoice.invoiceDate.toISOString().split('T')[0],
+        due_date: invoice.dueDate.toISOString().split('T')[0],
+        status: invoice.status,
+        subtotal: invoice.subtotal,
+        discount: invoice.discount || 0,
+        vat: invoice.vat || 0,
+        total: invoice.total,
+        items: invoice.items,
+        notes: invoice.notes || '',
+        created_at: invoice.createdAt.toISOString()
+      }));
+
+      // Generate filename
+      const timestamp = new Date().toISOString().split('T')[0];
+      const formatName = format.replace('_', '-');
+      const filename = `invoices-${formatName}-${timestamp}.${format.includes('csv') ? 'csv' : 'iif'}`;
+
+      // Create export content based on format
+      let exportContent = '';
+      if (format.includes('csv') || format === 'generic_csv') {
+        // CSV format
+        const headers = [
+          'Invoice Number', 'Client Name', 'Client Email', 'Invoice Date', 
+          'Due Date', 'Status', 'Subtotal', 'Discount', 'VAT', 'Total', 'Notes'
+        ];
+        exportContent = headers.join(',') + '\n';
+        exportContent += exportData.map(invoice => [
+          `"${invoice.invoice_number}"`,
+          `"${invoice.client_name}"`,
+          `"${invoice.client_email}"`,
+          invoice.invoice_date,
+          invoice.due_date,
+          invoice.status,
+          invoice.subtotal,
+          invoice.discount,
+          invoice.vat,
+          invoice.total,
+          `"${invoice.notes}"`
+        ].join(',')).join('\n');
+      } else if (format === 'quickbooks_iif') {
+        // QuickBooks IIF format
+        exportContent = `!HDR   PROD    VER     REL     IIFVER  DATE    TIME    ACCNT   ENTITY  CCARD   INVITEM PAYMETH VTYPE   TERMS   MEM
+!HDR    QuickBooks Pro  2023    R1      1       ${new Date().toLocaleDateString()}      ${new Date().toLocaleTimeString()}                      Y       Y                       Y       Y
+!ACCNT  NAME    ACCNTTYPE       DESC
+ACCNT   Accounts Receivable     AR      Accounts Receivable
+ACCNT   Sales   INC     Sales Income
+!INVITEM        NAME    INVITEMTYPE     DESC    PRICE
+INVITEM Service SERV    Service Item    0.00
+!TRNS   TRNSTYPE        DATE    ACCNT   NAME    AMOUNT  MEMO
+!SPL    TRNSTYPE        DATE    ACCNT   NAME    AMOUNT  MEMO    INVITEM QNTY    PRICE
+!ENDTRNS
+`;
+        exportData.forEach(invoice => {
+          exportContent += `TRNS        INVOICE ${invoice.invoice_date} Accounts Receivable     ${invoice.client_name}  ${invoice.total}        ${invoice.invoice_number}\n`;
+          exportContent += `SPL INVOICE ${invoice.invoice_date} Sales   ${invoice.client_name}  -${invoice.total}               1       ${invoice.total}\n`;
+          exportContent += `ENDTRNS\n`;
+        });
+      }
+
+      // Create blob URL for download
+      const buffer = Buffer.from(exportContent, 'utf-8');
+      const base64 = buffer.toString('base64');
+      const downloadUrl = `data:${format.includes('csv') ? 'text/csv' : 'application/octet-stream'};base64,${base64}`;
+
+      res.json({
+        success: true,
+        message: `Successfully exported ${filteredInvoices.length} invoices`,
+        downloadUrl,
+        filename,
+        count: filteredInvoices.length
+      });
+    } catch (error: any) {
+      console.error('Quick export error:', error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Accounting software export endpoints
   app.get("/api/export/formats", requireAuth, async (req, res) => {
     try {

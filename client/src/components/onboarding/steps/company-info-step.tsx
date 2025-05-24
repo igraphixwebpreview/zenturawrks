@@ -170,12 +170,12 @@ export function CompanyInfoStep({ data, onNext, onBack }: CompanyInfoStepProps) 
       </CardContent>
       
       {/* Fixed Navigation at bottom */}
-      <div className="flex justify-between items-center p-6 border-t-2 border-gray-200 dark:border-gray-700 bg-white/95 backdrop-blur-md">
+      <div className="flex justify-between items-center p-6 border-t-2 border-gray-200/50 dark:border-gray-700/50 bg-white/80 backdrop-blur-xl shadow-lg">
         {onBack ? (
           <Button 
             variant="outline" 
             onClick={onBack} 
-            className="px-8 py-3 h-12 text-base font-medium border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+            className="px-8 py-3 h-12 text-base font-medium border-2 border-white/30 hover:border-white/50 bg-white/20 hover:bg-white/30 backdrop-blur-sm"
           >
             Back
           </Button>

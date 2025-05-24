@@ -166,16 +166,26 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
       <div className="p-2">
         {!collapsed && user && (
           <div className="flex items-center space-x-3 px-3 py-2 mb-2">
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-xs font-medium text-primary-foreground">
-                {user.email.charAt(0).toUpperCase()}
-              </span>
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center overflow-hidden">
+              {user.photoURL ? (
+                <img 
+                  src={user.photoURL} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xs font-medium text-primary-foreground">
+                  {user.displayName?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground truncate">
-                {user.email}
+                {user.displayName || user.email}
               </p>
-              <p className="text-xs text-muted-foreground">Admin</p>
+              <p className="text-xs text-muted-foreground">
+                {user.isAdmin ? 'Admin' : 'User'} • {user.email}
+              </p>
             </div>
           </div>
         )}

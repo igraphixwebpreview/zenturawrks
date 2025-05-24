@@ -26,15 +26,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setFirebaseUser(firebaseUser);
       
       if (firebaseUser) {
-        try {
-          // Create user profile if it doesn't exist
-          await createUserProfile(firebaseUser);
-          // Get user profile
-          const userProfile = await getUserProfile(firebaseUser.uid);
-          setUser(userProfile);
-        } catch (error) {
-          console.error("Error setting up user:", error);
-        }
+        // Create user object directly from Firebase Auth data
+        const userProfile: User = {
+          id: 1, // Simple ID for compatibility
+          email: firebaseUser.email || '',
+          firebaseUid: firebaseUser.uid,
+          isAdmin: true, // Set as admin for now
+          createdAt: new Date(firebaseUser.metadata.creationTime || Date.now()),
+          photoURL: firebaseUser.photoURL || null,
+          displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User'
+        };
+        setUser(userProfile);
       } else {
         setUser(null);
       }

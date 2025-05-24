@@ -13,11 +13,13 @@ import {
 import { auth, db } from "./firebase";
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
   firebaseUid: string;
-  displayName?: string;
+  isAdmin: boolean;
   createdAt: Date;
+  photoURL?: string | null;
+  displayName?: string;
 }
 
 export const signIn = async (email: string, password: string): Promise<FirebaseUser> => {

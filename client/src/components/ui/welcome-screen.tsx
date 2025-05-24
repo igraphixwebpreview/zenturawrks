@@ -56,7 +56,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
                 duration: 0.8,
                 ease: "easeOut"
               }}
-              className="mb-6"
+              className="mb-8"
             >
               {companyLogo ? (
                 <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
@@ -82,7 +82,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
                 delay: 0.3,
                 ease: "easeOut"
               }}
-              className="text-3xl font-bold text-foreground mb-2"
+              className="text-3xl font-bold text-foreground mb-4"
             >
               InvoiceGen
             </motion.h1>
@@ -96,7 +96,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
                 delay: 0.5,
                 ease: "easeOut"
               }}
-              className="text-muted-foreground text-lg"
+              className="text-muted-foreground text-lg mb-8"
             >
               {companyName ? `Welcome back, ${companyName}` : `Hello, ${userEmail?.split('@')[0] || 'User'}`}
             </motion.p>
@@ -109,10 +109,12 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
                 duration: 0.4,
                 delay: 0.8
               }}
-              className="mt-8"
             >
-              <div className="text-black dark:text-white font-medium text-lg">
+              <div className="text-black dark:text-white font-semibold text-2xl">
                 {loadingProgress}%
+              </div>
+              <div className="text-muted-foreground text-sm mt-2">
+                Setting up your workspace...
               </div>
             </motion.div>
           </div>

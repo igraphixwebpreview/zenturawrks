@@ -74,7 +74,7 @@ export function ThemeCustomizer() {
                       style={{ backgroundColor: theme.color }}
                     >
                       {currentTheme === theme.value && (
-                        <Check className="w-4 h-4 text-white m-auto mt-1" />
+                        <Check className="w-5 h-5 text-white" />
                       )}
                     </div>
                     <span className="font-semibold text-sm">{theme.name}</span>

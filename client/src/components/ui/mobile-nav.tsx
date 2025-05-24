@@ -24,6 +24,11 @@ const navItems = [
     icon: BarChart3,
     label: "Export",
   },
+  {
+    href: "/settings",
+    icon: Settings,
+    label: "Settings",
+  },
 ];
 
 export function MobileNav() {

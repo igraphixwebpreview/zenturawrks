@@ -26,6 +26,7 @@ import {
 import Dashboard from "@/pages/dashboard";
 import CreateInvoice from "@/pages/create-invoice";
 import Invoices from "@/pages/invoices";
+import Clients from "@/pages/clients";
 import Templates from "@/pages/templates";
 import Settings from "@/pages/settings";
 import Export from "@/pages/export";
@@ -200,6 +201,7 @@ function AuthenticatedApp() {
               <Route path="/" component={Dashboard} />
               <Route path="/create-invoice" component={CreateInvoice} />
               <Route path="/invoices" component={Invoices} />
+              <Route path="/clients" component={Clients} />
               <Route path="/templates" component={Templates} />
               <Route path="/export" component={Export} />
               <Route path="/reminders" component={Reminders} />

@@ -32,13 +32,11 @@ export function WelcomeScreen({ onComplete, companyName, userEmail }: WelcomeScr
             transition: { duration: 0.6, ease: "easeInOut" }
           }}
         >
-          {/* Subtle background gradient using theme colors */}
-          <div className="absolute inset-0" style={{
-            background: `linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--background)) 80%, hsl(var(--theme-primary) / 0.05) 100%)`
-          }} />
+          {/* Subtle background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
           
           <div className="relative flex flex-col items-center justify-center text-center">
-            {/* Logo with elegant animation using theme colors */}
+            {/* Logo with elegant animation */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -48,13 +46,8 @@ export function WelcomeScreen({ onComplete, companyName, userEmail }: WelcomeScr
               }}
               className="mb-6"
             >
-              <div 
-                className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
-                style={{
-                  background: `linear-gradient(135deg, hsl(var(--theme-primary)) 0%, hsl(var(--theme-primary) / 0.9) 100%)`
-                }}
-              >
-                <File className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/90 rounded-2xl flex items-center justify-center shadow-lg">
+                <File className="w-8 h-8 text-primary-foreground" />
               </div>
             </motion.div>
 
@@ -86,7 +79,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail }: WelcomeScr
               {companyName ? `Welcome back, ${companyName}` : `Hello, ${userEmail?.split('@')[0] || 'User'}`}
             </motion.p>
 
-            {/* Loading indicator using theme colors */}
+            {/* Loading indicator */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -96,17 +89,9 @@ export function WelcomeScreen({ onComplete, companyName, userEmail }: WelcomeScr
               }}
               className="mt-8"
             >
-              <div 
-                className="w-8 h-1 rounded-full overflow-hidden"
-                style={{
-                  backgroundColor: `hsl(var(--theme-primary) / 0.2)`
-                }}
-              >
+              <div className="w-8 h-1 bg-primary/20 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full"
-                  style={{
-                    backgroundColor: `hsl(var(--theme-primary))`
-                  }}
+                  className="h-full bg-primary rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
                   transition={{

@@ -26,6 +26,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setFirebaseUser(firebaseUser);
       
       if (firebaseUser) {
+        // Check for locally stored profile picture
+        const storageKey = `profile_picture_${firebaseUser.uid}`;
+        const storedPhotoURL = localStorage.getItem(storageKey);
+        
         // Create user object directly from Firebase Auth data
         const userProfile: User = {
           id: 1, // Simple ID for compatibility
@@ -33,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           firebaseUid: firebaseUser.uid,
           isAdmin: true, // Set as admin for now
           createdAt: new Date(firebaseUser.metadata.creationTime || Date.now()),
-          photoURL: firebaseUser.photoURL || null,
+          photoURL: storedPhotoURL || firebaseUser.photoURL || null,
           displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User'
         };
         setUser(userProfile);

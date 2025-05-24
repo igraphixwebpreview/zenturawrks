@@ -8,21 +8,23 @@ export const uploadProfilePicture = async (file: File): Promise<string> => {
   }
 
   try {
-    console.log("Using local data URL approach for immediate results");
+    console.log("Converting image for local storage");
     
-    // Convert file to data URL for immediate display
+    // Convert file to data URL for local storage
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = async (e) => {
+      reader.onload = (e) => {
         try {
           const dataURL = e.target?.result as string;
           console.log("File converted to data URL successfully");
           
-          // Update the user's profile with the data URL
-          await updateProfile(auth.currentUser!, {
-            photoURL: dataURL
-          });
-          console.log("Profile updated successfully with data URL");
+          // Store in localStorage with user ID
+          const storageKey = `profile_picture_${auth.currentUser!.uid}`;
+          localStorage.setItem(storageKey, dataURL);
+          console.log("Profile picture stored locally");
+          
+          // Force reload to update the UI
+          window.location.reload();
           
           resolve(dataURL);
         } catch (error) {
@@ -36,6 +38,12 @@ export const uploadProfilePicture = async (file: File): Promise<string> => {
     console.error("Upload error:", error);
     throw error;
   }
+};
+
+export const getStoredProfilePicture = (): string | null => {
+  if (!auth.currentUser) return null;
+  const storageKey = `profile_picture_${auth.currentUser.uid}`;
+  return localStorage.getItem(storageKey);
 };
 
 export const updateDisplayName = async (displayName: string): Promise<void> => {

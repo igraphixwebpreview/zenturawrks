@@ -119,7 +119,7 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-2">
-        <div className="space-y-1">
+        <div className="space-y-8">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
@@ -129,7 +129,7 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
                 <Button
                   variant={isActive ? "secondary" : "ghost"}
                   className={cn(
-                    "w-full justify-start h-12 py-4",
+                    "w-full justify-start h-16 py-6 leading-relaxed",
                     collapsed ? "px-2" : "px-3",
                     isActive && "bg-primary/10 text-primary hover:bg-primary/20 border-r-2 border-primary"
                   )}

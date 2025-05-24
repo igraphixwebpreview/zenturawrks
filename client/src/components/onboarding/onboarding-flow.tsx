@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
+import { setLanguage, t } from "@/lib/i18n";
 import { LanguageProfileStep } from "./steps/language-profile-step";
 import { CompanyInfoStep } from "./steps/company-info-step";
 import { BrandAssetsStep } from "./steps/brand-assets-step";
@@ -45,6 +46,11 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const handleNext = (data: any) => {
     setStepData(prev => ({ ...prev, ...data }));
     
+    // If language was changed in the first step, update the app language
+    if (data.language) {
+      setLanguage(data.language);
+    }
+    
     const nextStepIndex = currentStepIndex + 1;
     if (nextStepIndex < availableSteps.length) {
       setCurrentStep(availableSteps[nextStepIndex].id);
@@ -87,11 +93,22 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         <div className="pt-8 pb-6">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-light text-gray-900 dark:text-white mb-2">
-              Set Up Your Invoice Generator
+              {t('onboarding.setup.title')}
             </h1>
             <p className="text-gray-500 dark:text-gray-400">
-              Let's personalize your workspace in just a few steps
+              {t('onboarding.setup.subtitle')}
             </p>
+            {/* Temporary reset button for testing */}
+            <button 
+              onClick={() => {
+                localStorage.removeItem('onboarding-complete');
+                window.location.reload();
+              }}
+              className="mt-4 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              style={{ fontSize: '10px' }}
+            >
+              Reset for Testing
+            </button>
           </div>
 
           {/* Progress bar */}

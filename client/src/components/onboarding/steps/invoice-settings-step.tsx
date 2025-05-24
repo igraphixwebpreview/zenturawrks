@@ -242,9 +242,9 @@ export function InvoiceSettingsStep({ data, onNext, onBack, isAdmin }: InvoiceSe
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between pt-6">
+        <div className="flex justify-between items-center pt-8 border-t border-gray-100 dark:border-gray-800">
           {onBack ? (
-            <Button variant="outline" onClick={onBack} className="px-8">
+            <Button variant="outline" onClick={onBack} className="px-8 h-12">
               Back
             </Button>
           ) : (
@@ -254,9 +254,9 @@ export function InvoiceSettingsStep({ data, onNext, onBack, isAdmin }: InvoiceSe
           <Button 
             onClick={handleNext}
             disabled={!isValid}
-            className="px-8 bg-primary hover:bg-primary/90"
+            className="px-8 h-12 bg-primary hover:bg-primary/90 text-white"
           >
-            Continue
+            Next
           </Button>
         </div>
       </CardContent>

@@ -178,11 +178,11 @@ export function WelcomeCompleteStep({ data, onNext, isAdmin }: WelcomeCompleteSt
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.5 }}
-          className="pt-6"
+          className="pt-8 border-t border-gray-100 dark:border-gray-800"
         >
           <Button 
             onClick={handleComplete}
-            className="w-full h-14 text-lg bg-primary hover:bg-primary/90 shadow-lg"
+            className="w-full h-14 text-lg bg-primary hover:bg-primary/90 shadow-lg text-white"
           >
             <Rocket className="w-5 h-5 mr-2" />
             Launch InvoiceGen

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { File } from "lucide-react";
+import { Building2 } from "lucide-react";
 
 interface WelcomeScreenProps {
   onComplete: () => void;
   companyName?: string;
   userEmail?: string;
+  companyLogo?: string;
 }
 
-export function WelcomeScreen({ onComplete, companyName, userEmail }: WelcomeScreenProps) {
+export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo }: WelcomeScreenProps) {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
@@ -46,9 +47,19 @@ export function WelcomeScreen({ onComplete, companyName, userEmail }: WelcomeScr
               }}
               className="mb-6"
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/90 rounded-2xl flex items-center justify-center shadow-lg">
-                <File className="w-8 h-8 text-primary-foreground" />
-              </div>
+              {companyLogo ? (
+                <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
+                  <img 
+                    src={companyLogo} 
+                    alt="Company Logo" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center shadow-lg">
+                  <Building2 className="w-8 h-8 text-white" />
+                </div>
+              )}
             </motion.div>
 
             {/* App name with clean typography */}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -144,13 +144,23 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 function AuthenticatedApp() {
   const [location, setLocation] = useLocation();
   const [showWelcome, setShowWelcome] = useState(true);
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
   const { user } = useAuth();
+  
+  // Check for stored company logo
+  useEffect(() => {
+    const storedLogo = localStorage.getItem('company-logo');
+    if (storedLogo) {
+      setCompanyLogo(storedLogo);
+    }
+  }, []);
   
   if (showWelcome) {
     return (
       <WelcomeScreen 
         onComplete={() => setShowWelcome(false)}
         userEmail={user?.email}
+        companyLogo={companyLogo || undefined}
       />
     );
   }

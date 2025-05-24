@@ -43,8 +43,8 @@ export function WelcomeCompleteStep({ data, onNext, isAdmin }: WelcomeCompleteSt
   ];
 
   return (
-    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md">
-      <CardHeader className="text-center pb-6">
+    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md h-[80vh] flex flex-col">
+      <CardHeader className="text-center pb-6 flex-shrink-0">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -80,7 +80,7 @@ export function WelcomeCompleteStep({ data, onNext, isAdmin }: WelcomeCompleteSt
         </motion.div>
       </CardHeader>
 
-      <CardContent className="space-y-8">
+      <CardContent className="space-y-8 flex-1 overflow-y-auto px-6 pb-4">
         {/* Setup Summary */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -173,22 +173,25 @@ export function WelcomeCompleteStep({ data, onNext, isAdmin }: WelcomeCompleteSt
           </div>
         </motion.div>
 
-        {/* Get Started Button */}
+      </CardContent>
+      
+      {/* Fixed Navigation at bottom */}
+      <div className="flex justify-center items-center p-6 border-t-2 border-gray-200/50 dark:border-gray-700/50 bg-white/80 backdrop-blur-xl shadow-lg">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.5 }}
-          className="pt-8 border-t border-gray-100 dark:border-gray-800"
+          className="w-full"
         >
           <Button 
             onClick={handleComplete}
-            className="w-full h-14 text-lg bg-primary hover:bg-primary/90 shadow-lg text-white"
+            className="w-full h-14 text-lg bg-blue-600/90 hover:bg-blue-700/90 text-white border-2 border-blue-400/50 shadow-lg hover:shadow-xl backdrop-blur-sm transition-all"
           >
             <Rocket className="w-5 h-5 mr-2" />
             Launch InvoiceGen
           </Button>
         </motion.div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

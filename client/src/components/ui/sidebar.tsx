@@ -135,18 +135,19 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
             
             return (
               <Link key={item.href} href={item.href}>
-                <Button
-                  variant={isActive ? "secondary" : "ghost"}
+                <button
                   className={cn(
-                    "w-full justify-start h-16 py-6 leading-relaxed",
-                    collapsed ? "px-2" : "px-3",
-                    isActive && "bg-primary/10 text-primary hover:bg-primary/20 border-r-2 border-primary"
+                    "w-full h-16 py-6 leading-relaxed rounded-2xl transition-all duration-300 flex items-center",
+                    collapsed ? "px-2 justify-center" : "px-3 justify-start",
+                    isActive 
+                      ? "backdrop-blur-md bg-white/20 text-primary shadow-lg border border-white/30 border-r-4 border-r-primary" 
+                      : "text-gray-600 hover:text-primary hover:backdrop-blur-sm hover:bg-white/10 hover:shadow-md"
                   )}
                   title={collapsed ? item.title : undefined}
                 >
                   <Icon className={cn("h-4 w-4", collapsed ? "mx-auto" : "mr-3")} />
                   {!collapsed && <span>{item.title}</span>}
-                </Button>
+                </button>
               </Link>
             );
           })}

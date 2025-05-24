@@ -279,9 +279,15 @@ export default function Settings() {
                       )}
                     </div>
                     <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <label htmlFor="profile-upload" className="cursor-pointer">
-                        <Image className="h-5 w-5 text-white" />
-                        <span className="sr-only">Upload profile picture</span>
+                      <label htmlFor="profile-upload" className={`cursor-pointer ${uploading ? 'pointer-events-none' : ''}`}>
+                        {uploading ? (
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                        ) : (
+                          <Image className="h-5 w-5 text-white" />
+                        )}
+                        <span className="sr-only">
+                          {uploading ? 'Uploading...' : 'Upload profile picture'}
+                        </span>
                       </label>
                     </div>
                     <input

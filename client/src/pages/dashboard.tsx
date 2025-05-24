@@ -47,25 +47,29 @@ export default function Dashboard() {
           </Card>
         </Link>
 
-        <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-2 border-dashed border-border">
-          <CardContent className="flex flex-col items-center justify-center p-6 text-center">
-            <Mail className="h-8 w-8 text-muted-foreground mb-3" />
-            <h3 className="font-medium text-foreground">Bulk Email</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Send reminders to pending invoices
-            </p>
-          </CardContent>
-        </Card>
+        <Link href="/reminders">
+          <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-2 border-dashed border-border">
+            <CardContent className="flex flex-col items-center justify-center p-6 text-center">
+              <Mail className="h-8 w-8 text-muted-foreground mb-3" />
+              <h3 className="font-medium text-foreground">Bulk Email</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Send reminders to pending invoices
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-2 border-dashed border-border">
-          <CardContent className="flex flex-col items-center justify-center p-6 text-center">
-            <FileText className="h-8 w-8 text-muted-foreground mb-3" />
-            <h3 className="font-medium text-foreground">Export Report</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Download monthly financial report
-            </p>
-          </CardContent>
-        </Card>
+        <Link href="/export">
+          <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-2 border-dashed border-border">
+            <CardContent className="flex flex-col items-center justify-center p-6 text-center">
+              <FileText className="h-8 w-8 text-muted-foreground mb-3" />
+              <h3 className="font-medium text-foreground">Export Report</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Download monthly financial report
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
 
         <Link href="/templates">
           <Card className="cursor-pointer hover:bg-muted/50 transition-colors border-2 border-dashed border-border">

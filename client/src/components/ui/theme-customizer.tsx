@@ -62,24 +62,27 @@ export function ThemeCustomizer() {
                   key={theme.value}
                   onClick={() => applyTheme(theme.value)}
                   className={cn(
-                    "relative p-4 rounded-2xl border-2 transition-all duration-300 hover:scale-105 text-left",
+                    "relative p-4 rounded-xl border-2 transition-all duration-200 text-left group",
                     currentTheme === theme.value
-                      ? "border-primary bg-primary/5 shadow-lg"
-                      : "border-border hover:border-border/80 hover:bg-accent/30"
+                      ? "border-2"
+                      : "border-gray-200 hover:border-gray-300"
                   )}
+                  style={{
+                    borderColor: currentTheme === theme.value ? theme.color : undefined
+                  }}
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <div
-                      className="theme-color-picker"
+                      className="w-6 h-6 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: theme.color }}
                     >
                       {currentTheme === theme.value && (
-                        <Check className="w-5 h-5 text-white" />
+                        <Check className="w-4 h-4 text-white" />
                       )}
                     </div>
-                    <span className="font-semibold text-sm">{theme.name}</span>
+                    <span className="font-semibold text-sm text-gray-900">{theme.name}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">{theme.description}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">{theme.description}</p>
                 </button>
               ))}
             </div>

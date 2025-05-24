@@ -15,6 +15,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
+import { uploadProfilePicture, validateImageFile } from "@/lib/profile-upload";
 
 const settingsSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
@@ -32,6 +33,7 @@ type SettingsForm = z.infer<typeof settingsSchema>;
 export default function Settings() {
   const { toast } = useToast();
   const { user } = useAuth();
+  const [uploading, setUploading] = useState(false);
 
   // Initialize form with default values for now
   const form = useForm<SettingsForm>({
@@ -47,6 +49,39 @@ export default function Settings() {
       paymentTerms: 30,
     },
   });
+
+  const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      
+      // Validate the file
+      validateImageFile(file);
+      
+      // Upload the file to Firebase Storage
+      const downloadURL = await uploadProfilePicture(file);
+      
+      toast({
+        title: "Profile Picture Updated",
+        description: "Your profile picture has been updated successfully!",
+      });
+      
+      // Refresh the page to show the new profile picture
+      window.location.reload();
+      
+    } catch (error: any) {
+      console.error("Profile picture upload error:", error);
+      toast({
+        title: "Upload Failed",
+        description: error.message || "Failed to upload profile picture. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = (data: SettingsForm) => {
     // For now, just show success message
@@ -191,45 +226,97 @@ export default function Settings() {
           </CardContent>
         </Card>
 
-        {/* Admin Management */}
+        {/* Profile Management */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Admin Users</CardTitle>
-            <Button type="button" variant="outline" size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Admin
-            </Button>
+          <CardHeader>
+            <CardTitle>Profile Settings</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-6">
               {user && (
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-primary-foreground" />
+                <div className="flex items-start space-x-4">
+                  <div className="relative group">
+                    <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center overflow-hidden border-4 border-background shadow-lg">
+                      {user.photoURL ? (
+                        <img 
+                          src={user.photoURL} 
+                          alt="Profile" 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-lg font-medium text-primary-foreground">
+                          {user.displayName?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
+                        </span>
+                      )}
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{user.email}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Created: {new Date(user.createdAt).toLocaleDateString()}
-                      </p>
+                    <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <label htmlFor="profile-upload" className="cursor-pointer">
+                        <Image className="h-5 w-5 text-white" />
+                        <span className="sr-only">Upload profile picture</span>
+                      </label>
                     </div>
+                    <input
+                      id="profile-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleProfilePictureUpload}
+                      disabled={uploading}
+                    />
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                      Active
-                    </Badge>
-                    <Badge variant="outline">
-                      Admin
-                    </Badge>
+                  <div className="flex-1 space-y-2">
+                    <div>
+                      <h3 className="text-lg font-medium text-foreground">
+                        {user.displayName || user.email.split('@')[0]}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">{user.email}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                        Active
+                      </Badge>
+                      <Badge variant="outline">
+                        {user.isAdmin ? 'Admin' : 'User'}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Account created: {new Date(user.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="displayName">Display Name</Label>
+                  <Input 
+                    id="displayName"
+                    placeholder="Enter your display name"
+                    defaultValue={user?.displayName || user?.email.split('@')[0] || ''}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="profileEmail">Email Address</Label>
+                  <Input 
+                    id="profileEmail"
+                    type="email"
+                    value={user?.email || ''}
+                    disabled
+                    className="bg-muted"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Image className="h-4 w-4 mr-2" />
+                  Change Picture
+                </Button>
+                <Button variant="outline" size="sm">
+                  Update Profile
+                </Button>
+              </div>
             </div>
-            <Separator className="my-4" />
-            <p className="text-sm text-muted-foreground">
-              Additional admin management features will be available in future updates.
-            </p>
           </CardContent>
         </Card>
 

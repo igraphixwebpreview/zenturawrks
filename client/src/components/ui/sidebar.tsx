@@ -84,7 +84,10 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
       {...props}
     >
       {/* Header */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-border">
+      <div className={cn(
+        "flex h-16 items-center justify-between border-b border-border",
+        collapsed ? "px-2" : "px-4"
+      )}>
         {!collapsed && (
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg">
@@ -96,8 +99,8 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
           </div>
         )}
         {collapsed && (
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto shadow-lg">
-            <span className="text-sm font-bold text-primary-foreground">IG</span>
+          <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto shadow-lg">
+            <span className="text-xs font-bold text-primary-foreground">IG</span>
           </div>
         )}
         {onToggle && (

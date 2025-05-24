@@ -261,15 +261,15 @@
   }
   
   .mobile-nav-item {
-    @apply flex flex-col items-center justify-center pt-4 pb-8 px-2 rounded-2xl transition-all duration-300 text-xs font-medium min-h-[80px] flex-1;
+    @apply flex flex-col items-center justify-center pt-4 pb-8 px-2 rounded-2xl transition-all duration-200 text-xs font-medium min-h-[80px] flex-1;
   }
   
   .mobile-nav-item.active {
-    @apply bg-primary/10 text-primary scale-105;
+    @apply backdrop-blur-md bg-white/20 text-primary scale-105 shadow-lg border border-white/30;
   }
   
   .mobile-nav-item:not(.active) {
-    @apply text-muted-foreground hover:text-foreground hover:bg-accent/50;
+    @apply text-gray-600 hover:text-primary hover:backdrop-blur-sm hover:bg-white/10 hover:scale-105;
   }
   
   /* Animated gradient backgrounds */

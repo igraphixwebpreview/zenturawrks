@@ -56,7 +56,7 @@ export function StatsGrid() {
       {statCards.map((stat) => {
         const Icon = stat.icon;
         return (
-          <Card key={stat.title} className="border border-border/40">
+          <Card key={stat.title} className="border-0 shadow-lg backdrop-blur-md bg-white/20">
             <CardContent className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">

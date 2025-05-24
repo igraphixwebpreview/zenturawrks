@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: 240 10% 98%; /* #F8F9FB */
+  --background: 240 10% 96%; /* Slightly darker for glass effect */
   --foreground: 240 10% 9%; /* #16181B */
-  --card: 0 0% 100%; /* #FFFFFF */
+  --card: 0 0% 100% / 0.7; /* Semi-transparent white */
   --card-foreground: 240 10% 9%; /* #16181B */
-  --popover: 0 0% 100%; /* #FFFFFF */
+  --popover: 0 0% 100% / 0.8; /* Semi-transparent white */
   --popover-foreground: 240 10% 9%; /* #16181B */
   --primary: var(--theme-primary, 262 83% 58%); /* #7C3AED - Purple default */
   --primary-foreground: 0 0% 100%; /* #FFFFFF */
@@ -19,8 +19,8 @@
   --accent-foreground: var(--theme-primary, 262 83% 58%);
   --destructive: 0 84% 60%; /* #EF4444 */
   --destructive-foreground: 0 0% 100%; /* #FFFFFF */
-  --border: 240 6% 90%; /* #E2E8F0 */
-  --input: 240 6% 90%; /* #E2E8F0 */
+  --border: 0 0% 100% / 0.2; /* Semi-transparent border */
+  --input: 0 0% 100% / 0.6; /* Semi-transparent input */
   --ring: var(--theme-primary, 262 83% 58%);
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
@@ -157,9 +157,29 @@
 }
 
 @layer components {
-  /* Modern glassmorphism cards */
+  /* Enhanced glassmorphism cards */
   .glass-card {
-    @apply backdrop-blur-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 rounded-3xl;
+    @apply backdrop-blur-xl bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 rounded-3xl shadow-xl;
+  }
+  
+  /* Glass sidebar */
+  .glass-sidebar {
+    @apply backdrop-blur-2xl bg-white/10 border-r border-white/20 shadow-2xl;
+  }
+  
+  /* Glass navigation */
+  .glass-nav {
+    @apply backdrop-blur-xl bg-white/15 border border-white/25 rounded-2xl shadow-lg;
+  }
+  
+  /* Glass input fields */
+  .glass-input {
+    @apply backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl;
+  }
+  
+  /* Glass buttons */
+  .glass-button {
+    @apply backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl hover:bg-white/30 transition-all duration-300;
   }
   
   /* Exciting modern card with gradient border */

@@ -40,11 +40,14 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
+      {/* Glassy overlay pattern */}
+      <div className="fixed inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 pointer-events-none" />
+      
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-md md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -60,9 +63,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Modern header with gradient */}
-        <div className="flex h-16 items-center justify-between px-4 md:px-8 border-b border-border/50 bg-gradient-to-r from-background via-background to-accent/20">
+      <div className="flex-1 flex flex-col overflow-hidden relative z-10">
+        {/* Glassy header */}
+        <div className="flex h-16 items-center justify-between px-4 md:px-8 border-b border-white/20 backdrop-blur-xl bg-white/10">
           {/* Left side - Mobile menu or logo */}
           <div className="flex items-center gap-4">
             {isMobile && (
@@ -130,10 +133,12 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        {/* Page content with mobile padding */}
+        {/* Glassy page content */}
         <main className={`flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'p-2 pb-24' : 'p-4 md:p-8'}`}>
           <div className={`${isMobile ? 'w-full max-w-none' : 'max-w-6xl'} mx-auto`}>
-            {children}
+            <div className="backdrop-blur-sm bg-white/5 rounded-3xl p-6 border border-white/10">
+              {children}
+            </div>
           </div>
         </main>
       </div>

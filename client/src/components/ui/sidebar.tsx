@@ -76,9 +76,9 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
   return (
     <div
       className={cn(
-        "flex h-screen flex-col border-r border-border bg-background",
+        "flex h-screen flex-col glass-sidebar",
         collapsed ? "w-16" : "w-64",
-        "transition-all duration-300 ease-in-out",
+        "transition-all duration-300 ease-in-out relative z-10",
         className
       )}
       {...props}

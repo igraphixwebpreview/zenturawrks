@@ -394,11 +394,11 @@ export function EmailTemplateManager() {
                     )}
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex flex-col sm:flex-row gap-4">
                     <Button 
                       type="submit" 
                       disabled={createTemplate.isPending || updateTemplate.isPending}
-                      className="btn-modern btn-primary"
+                      className="btn-modern btn-primary flex-shrink-0"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       {isCreating ? "Create Template" : "Update Template"}
@@ -412,7 +412,7 @@ export function EmailTemplateManager() {
                           loadDefaultTemplate(value);
                         }}
                       >
-                        <SelectTrigger className="w-48">
+                        <SelectTrigger className="w-full sm:w-48 flex-shrink-0">
                           <SelectValue placeholder="Load default for..." />
                         </SelectTrigger>
                         <SelectContent>

@@ -105,7 +105,10 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
               {/* Simple progress bar */}
               <div className="w-48 h-1 bg-gray-200 dark:bg-gray-800 rounded-full mb-4">
                 <motion.div 
-                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                  className="h-full bg-primary rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.8))`
+                  }}
                   initial={{ width: 0 }}
                   animate={{ width: `${loadingProgress}%` }}
                   transition={{ duration: 0.3, ease: "easeOut" }}

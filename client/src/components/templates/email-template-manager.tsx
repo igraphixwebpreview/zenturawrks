@@ -264,7 +264,7 @@ export function EmailTemplateManager() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Template List */}
         <div className="space-y-4">
           <Card>
@@ -323,7 +323,7 @@ export function EmailTemplateManager() {
           </Card>
         </div>
 
-        {/* Template Editor */}
+        {/* Template Editor with Preview and Variables */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -386,7 +386,7 @@ export function EmailTemplateManager() {
                     <Textarea 
                       id="body"
                       {...form.register("body")}
-                      rows={12}
+                      rows={8}
                       placeholder="Email body with variables like {client_name}, {invoice_number}, etc."
                     />
                     {form.formState.errors.body && (
@@ -436,10 +436,8 @@ export function EmailTemplateManager() {
               )}
             </CardContent>
           </Card>
-        </div>
 
-        {/* Template Preview */}
-        <div className="space-y-6">
+          {/* Preview Section */}
           <Card>
             <CardHeader>
               <CardTitle>Preview</CardTitle>
@@ -457,7 +455,7 @@ export function EmailTemplateManager() {
 
                 <div>
                   <Label className="text-sm font-medium text-muted-foreground">Body:</Label>
-                  <div className="mt-1 p-4 bg-muted/50 rounded border max-h-96 overflow-y-auto">
+                  <div className="mt-1 p-4 bg-muted/50 rounded border max-h-64 overflow-y-auto">
                     <div className="text-sm whitespace-pre-wrap">
                       {previewBody || "Enter a body template"}
                     </div>

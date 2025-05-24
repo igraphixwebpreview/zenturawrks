@@ -67,11 +67,15 @@ export default function Settings() {
     try {
       setUploading(true);
       
+      console.log("Starting upload for file:", file.name, file.size);
+      
       // Validate the file
       validateImageFile(file);
+      console.log("File validation passed");
       
       // Upload the file to Firebase Storage
       const downloadURL = await uploadProfilePicture(file);
+      console.log("Upload successful, URL:", downloadURL);
       
       toast({
         title: "Profile Picture Updated",
@@ -79,7 +83,9 @@ export default function Settings() {
       });
       
       // Refresh the page to show the new profile picture
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
       
     } catch (error: any) {
       console.error("Profile picture upload error:", error);
@@ -90,6 +96,8 @@ export default function Settings() {
       });
     } finally {
       setUploading(false);
+      // Clear the input so the same file can be selected again if needed
+      e.target.value = '';
     }
   };
 

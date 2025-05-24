@@ -37,7 +37,7 @@ export function CompanyInfoStep({ data, onNext, onBack }: CompanyInfoStepProps) 
                  companyInfo.companyAddress.trim().length > 0;
 
   return (
-    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md">
+    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md flex flex-col max-h-[90vh]">
       <CardHeader className="text-center pb-6">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -55,7 +55,7 @@ export function CompanyInfoStep({ data, onNext, onBack }: CompanyInfoStepProps) 
         </p>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 flex-1 overflow-y-auto px-6 pb-6">
         {/* Company Name */}
         <div className="space-y-2">
           <Label htmlFor="companyName" className="text-base font-medium">
@@ -167,25 +167,30 @@ export function CompanyInfoStep({ data, onNext, onBack }: CompanyInfoStepProps) 
           </p>
         </div>
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center pt-8 border-t border-gray-100 dark:border-gray-800">
-          {onBack ? (
-            <Button variant="outline" onClick={onBack} className="px-8 h-12">
-              Back
-            </Button>
-          ) : (
-            <div />
-          )}
-          
-          <Button 
-            onClick={handleNext}
-            disabled={!isValid}
-            className="px-8 h-12 bg-primary hover:bg-primary/90 text-white"
-          >
-            Next
-          </Button>
-        </div>
       </CardContent>
+      
+      {/* Fixed Navigation at bottom */}
+      <div className="flex justify-between items-center p-6 border-t-2 border-gray-200 dark:border-gray-700 bg-white/95 backdrop-blur-md">
+        {onBack ? (
+          <Button 
+            variant="outline" 
+            onClick={onBack} 
+            className="px-8 py-3 h-12 text-base font-medium border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+          >
+            Back
+          </Button>
+        ) : (
+          <div />
+        )}
+        
+        <Button 
+          onClick={handleNext}
+          disabled={!isValid}
+          className="px-8 py-3 h-12 text-base font-medium bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </Button>
+      </div>
     </Card>
   );
 }

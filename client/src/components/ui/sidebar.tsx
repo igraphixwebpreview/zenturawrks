@@ -119,7 +119,7 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-2">
-        <div className="space-y-1">
+        <div className="space-y-4">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));

@@ -100,9 +100,12 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
               }}
               className="mt-8"
             >
-              <div className="w-8 h-1 bg-primary/20 rounded-full overflow-hidden">
+              <div className="w-8 h-1 bg-blue-500/20 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-primary rounded-full"
+                  className="h-full bg-blue-500 rounded-full"
+                  style={{
+                    backgroundColor: `hsl(var(--primary))`
+                  }}
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
                   transition={{

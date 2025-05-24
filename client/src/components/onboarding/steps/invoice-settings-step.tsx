@@ -66,8 +66,8 @@ export function InvoiceSettingsStep({ data, onNext, onBack, isAdmin }: InvoiceSe
                  invoiceSettings.nextInvoiceNumber > 0;
 
   return (
-    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md">
-      <CardHeader className="text-center pb-6">
+    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md h-[80vh] flex flex-col">
+      <CardHeader className="text-center pb-6 flex-shrink-0">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -84,7 +84,7 @@ export function InvoiceSettingsStep({ data, onNext, onBack, isAdmin }: InvoiceSe
         </p>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 flex-1 overflow-y-auto px-6 pb-4">
         {/* Invoice Numbering */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -241,25 +241,30 @@ export function InvoiceSettingsStep({ data, onNext, onBack, isAdmin }: InvoiceSe
           </p>
         </div>
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center pt-8 border-t border-gray-100 dark:border-gray-800">
-          {onBack ? (
-            <Button variant="outline" onClick={onBack} className="px-8 h-12">
-              Back
-            </Button>
-          ) : (
-            <div />
-          )}
-          
-          <Button 
-            onClick={handleNext}
-            disabled={!isValid}
-            className="px-8 h-12 bg-primary hover:bg-primary/90 text-white"
-          >
-            Next
-          </Button>
-        </div>
       </CardContent>
+      
+      {/* Fixed Navigation at bottom */}
+      <div className="flex justify-between items-center p-6 border-t-2 border-gray-200/50 dark:border-gray-700/50 bg-white/80 backdrop-blur-xl shadow-lg">
+        {onBack ? (
+          <Button 
+            variant="outline" 
+            onClick={onBack} 
+            className="px-8 py-3 h-12 text-base font-medium border-2 border-white/30 hover:border-white/50 bg-white/20 hover:bg-white/30 backdrop-blur-sm"
+          >
+            Back
+          </Button>
+        ) : (
+          <div />
+        )}
+        
+        <Button 
+          onClick={handleNext}
+          disabled={!isValid}
+          className="px-8 py-3 h-12 text-base font-medium bg-blue-600/90 hover:bg-blue-700/90 text-white border-2 border-blue-400/50 shadow-lg hover:shadow-xl backdrop-blur-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </Button>
+      </div>
     </Card>
   );
 }

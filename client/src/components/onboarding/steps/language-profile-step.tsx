@@ -63,8 +63,8 @@ export function LanguageProfileStep({ data, onNext, onBack, isAdmin }: LanguageP
   const selectedLanguage = languages.find(lang => lang.code === language);
 
   return (
-    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md min-h-[600px] flex flex-col">
-      <CardHeader className="text-center pb-6">
+    <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-white/95 backdrop-blur-md h-[80vh] flex flex-col">
+      <CardHeader className="text-center pb-6 flex-shrink-0">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -81,7 +81,7 @@ export function LanguageProfileStep({ data, onNext, onBack, isAdmin }: LanguageP
         </p>
       </CardHeader>
 
-      <CardContent className="space-y-8 flex-1 flex flex-col">
+      <CardContent className="space-y-8 flex-1 overflow-y-auto px-6 pb-4">
         {/* Language Selection */}
         <div className="space-y-3">
           <Label className="text-base font-medium flex items-center gap-2">
@@ -178,29 +178,30 @@ export function LanguageProfileStep({ data, onNext, onBack, isAdmin }: LanguageP
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center pt-8 mt-8 border-t-2 border-gray-200 dark:border-gray-700">
-          {onBack ? (
-            <Button 
-              variant="outline" 
-              onClick={onBack} 
-              className="px-8 py-3 h-12 text-base font-medium border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
-            >
-              Back
-            </Button>
-          ) : (
-            <div />
-          )}
-          
-          <Button 
-            onClick={handleNext}
-            disabled={!isValid}
-            className="px-8 py-3 h-12 text-base font-medium bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-600 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </Button>
-        </div>
       </CardContent>
+      
+      {/* Fixed Navigation at bottom */}
+      <div className="flex justify-between items-center p-6 border-t-2 border-gray-200/50 dark:border-gray-700/50 bg-white/80 backdrop-blur-xl shadow-lg">
+        {onBack ? (
+          <Button 
+            variant="outline" 
+            onClick={onBack} 
+            className="px-8 py-3 h-12 text-base font-medium border-2 border-white/30 hover:border-white/50 bg-white/20 hover:bg-white/30 backdrop-blur-sm"
+          >
+            Back
+          </Button>
+        ) : (
+          <div />
+        )}
+        
+        <Button 
+          onClick={handleNext}
+          disabled={!isValid}
+          className="px-8 py-3 h-12 text-base font-medium bg-blue-600/90 hover:bg-blue-700/90 text-white border-2 border-blue-400/50 shadow-lg hover:shadow-xl backdrop-blur-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </Button>
+      </div>
     </Card>
   );
 }

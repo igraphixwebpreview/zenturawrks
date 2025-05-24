@@ -46,14 +46,14 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const handleNext = (data: any) => {
     setStepData(prev => ({ ...prev, ...data }));
     
-    // If language was changed in the first step, update the app language
-    if (data.language) {
-      setLanguage(data.language);
-    }
-    
     const nextStepIndex = currentStepIndex + 1;
     if (nextStepIndex < availableSteps.length) {
       setCurrentStep(availableSteps[nextStepIndex].id);
+      
+      // If language was changed in the first step, update the app language when reaching screen 2
+      if (data.language && nextStepIndex === 1) {
+        setLanguage(data.language);
+      }
     } else {
       // Mark onboarding as complete
       localStorage.setItem('onboarding-complete', 'true');

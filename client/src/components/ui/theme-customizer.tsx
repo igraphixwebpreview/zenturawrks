@@ -44,8 +44,8 @@ export function ThemeCustomizer() {
           Theme
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 rounded-2xl p-0 border-0 shadow-xl" align="end">
-        <Card className="border-0 shadow-none bg-white">
+      <PopoverContent className="w-80 rounded-2xl p-0 border-0 shadow-2xl backdrop-blur-xl" align="end">
+        <Card className="border-0 shadow-none bg-white/80 backdrop-blur-xl border border-white/20">
           <CardHeader className="pb-4 px-6 pt-6">
             <CardTitle className="flex items-center gap-2 text-xl font-bold text-gray-900">
               <Palette className="w-5 h-5 text-gray-700" />
@@ -62,34 +62,33 @@ export function ThemeCustomizer() {
                   key={theme.value}
                   onClick={() => applyTheme(theme.value)}
                   className={cn(
-                    "relative p-4 rounded-2xl border-2 transition-all duration-300 text-left group hover:shadow-md",
+                    "relative p-4 rounded-2xl border transition-all duration-300 text-left group hover:shadow-lg backdrop-blur-sm",
                     currentTheme === theme.value
-                      ? "border-2 bg-gray-50/50 shadow-lg ring-2 ring-opacity-20"
-                      : "border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50/30"
+                      ? "border-2 bg-white/70 shadow-xl backdrop-blur-md"
+                      : "border-white/40 hover:border-white/60 bg-white/30 hover:bg-white/50 backdrop-blur-sm"
                   )}
                   style={{
-                    borderColor: currentTheme === theme.value ? theme.color : undefined,
-                    ringColor: currentTheme === theme.value ? `${theme.color}40` : undefined
+                    borderColor: currentTheme === theme.value ? theme.color : undefined
                   }}
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center shadow-sm ring-1 ring-white/20"
+                      className="w-7 h-7 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/30 backdrop-blur-sm"
                       style={{ backgroundColor: theme.color }}
                     >
                       {currentTheme === theme.value && (
-                        <Check className="w-4 h-4 text-white font-bold" />
+                        <Check className="w-4 h-4 text-white font-bold drop-shadow-sm" />
                       )}
                     </div>
-                    <span className="font-bold text-base text-gray-900">{theme.name}</span>
+                    <span className="font-bold text-base text-gray-900 drop-shadow-sm">{theme.name}</span>
                   </div>
-                  <p className="text-xs text-gray-600 leading-relaxed font-medium">{theme.description}</p>
+                  <p className="text-xs text-gray-700 leading-relaxed font-medium">{theme.description}</p>
                 </button>
               ))}
             </div>
             
-            <div className="pt-6 border-t border-gray-100 mt-6">
-              <div className="text-xs text-gray-500 text-center font-medium">
+            <div className="pt-6 border-t border-white/30 mt-6 backdrop-blur-sm">
+              <div className="text-xs text-gray-600 text-center font-medium drop-shadow-sm">
                 Your theme preference is saved automatically
               </div>
             </div>

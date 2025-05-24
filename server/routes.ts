@@ -417,6 +417,63 @@ INVITEM Service SERV    Service Item    0.00
     }
   });
 
+  // PDF generation endpoint using Word templates
+  app.post("/api/pdf/generate", requireAuth, async (req, res) => {
+    try {
+      const invoiceData = req.body;
+      
+      // Map invoice types to template files
+      const templateMap: Record<string, string> = {
+        "quotation": "quotation_template.docx",
+        "invoice_with_deposit": "invoice_with_deposit_template.docx", 
+        "final_invoice": "final_invoice_template.docx",
+        "receipt": "receipt_template.docx",
+        "balance_due_receipt": "balance_due_receipt_template.docx",
+        "contract_invoice": "contract_invoice_template.docx"
+      };
+
+      const templateName = templateMap[invoiceData.invoiceType] || "default_invoice_template.docx";
+      
+      // Call Python template processor
+      const { spawn } = require('child_process');
+      const python = spawn('python3', [
+        'server/template_processor.py',
+        '--template', templateName,
+        '--data', JSON.stringify(invoiceData)
+      ]);
+
+      let pdfData = '';
+      let errorData = '';
+
+      python.stdout.on('data', (data: any) => {
+        pdfData += data.toString();
+      });
+
+      python.stderr.on('data', (data: any) => {
+        errorData += data.toString();
+      });
+
+      python.on('close', (code: any) => {
+        if (code === 0) {
+          // Return PDF as base64
+          res.setHeader('Content-Type', 'application/pdf');
+          res.send(Buffer.from(pdfData, 'base64'));
+        } else {
+          console.error('Template processing error:', errorData);
+          res.status(500).json({ 
+            message: 'PDF generation failed', 
+            error: errorData,
+            templateUsed: templateName
+          });
+        }
+      });
+
+    } catch (error: any) {
+      console.error('PDF generation error:', error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // Accounting software export endpoints
   app.get("/api/export/formats", requireAuth, async (req, res) => {
     try {

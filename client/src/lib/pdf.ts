@@ -12,8 +12,25 @@ export interface InvoiceItem {
 
 export const generateInvoicePDF = async (invoice: Invoice, companyInfo?: any): Promise<Blob> => {
   try {
+    // Map invoice types to corresponding .docx template names
+    const templateMap: Record<string, string> = {
+      "quotation": "quotation_template.docx",
+      "invoice_with_deposit": "invoice_with_deposit_template.docx", 
+      "final_invoice": "final_invoice_template.docx",
+      "receipt": "receipt_template.docx",
+      "balance_due_receipt": "balance_due_receipt_template.docx",
+      "contract_invoice": "contract_invoice_template.docx"
+    };
+
+    // Get the template name based on invoice type
+    const templateName = templateMap[invoice.invoiceType] || "default_invoice_template.docx";
+
     // Prepare invoice data for Word template processing
     const invoiceData = {
+      // Template selection
+      templateName: templateName,
+      invoiceType: invoice.invoiceType,
+      
       // Company information
       companyName: companyInfo?.companyName || "Your Company",
       companyAddress: companyInfo?.companyAddress || "123 Business St, City, State 12345",

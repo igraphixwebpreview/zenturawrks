@@ -40,10 +40,20 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-100 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
-      {/* Glassy overlay effects */}
+    <div 
+      className="flex h-screen dark:from-gray-900 dark:via-blue-900 dark:to-purple-900"
+      style={{
+        background: `linear-gradient(to bottom right, hsl(var(--bg-from)), hsl(var(--bg-via)), hsl(var(--bg-to)))`
+      }}
+    >
+      {/* Dynamic glassy overlay effects */}
       <div className="fixed inset-0 bg-gradient-to-br from-white/30 via-transparent to-white/20 pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(circle_800px_at_100%_200px,rgba(120,119,198,0.3),transparent)] pointer-events-none" />
+      <div 
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle 800px at 100% 200px, hsl(var(--primary) / 0.3), transparent)`
+        }}
+      />
       
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (

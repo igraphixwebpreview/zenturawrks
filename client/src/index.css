@@ -46,6 +46,60 @@
   --theme-pink: 322 84% 60%; /* #EC4899 */
   --theme-indigo: 239 84% 67%; /* #6366F1 */
   --theme-cyan: 189 94% 43%; /* #06B6D4 */
+  
+  /* Dynamic background gradients */
+  --bg-from: 262 100% 95%; /* Light purple */
+  --bg-via: 280 100% 98%; /* Very light purple */
+  --bg-to: 262 100% 97%; /* Light purple variant */
+}
+
+/* Theme-specific backgrounds */
+.theme-purple {
+  --bg-from: 262 100% 95%; /* Light purple */
+  --bg-via: 280 100% 98%; /* Very light purple */
+  --bg-to: 262 100% 97%; /* Light purple variant */
+}
+
+.theme-blue {
+  --bg-from: 217 100% 95%; /* Light blue */
+  --bg-via: 200 100% 98%; /* Very light blue */
+  --bg-to: 217 100% 97%; /* Light blue variant */
+}
+
+.theme-emerald {
+  --bg-from: 142 100% 95%; /* Light emerald */
+  --bg-via: 160 100% 98%; /* Very light emerald */
+  --bg-to: 142 100% 97%; /* Light emerald variant */
+}
+
+.theme-rose {
+  --bg-from: 330 100% 95%; /* Light rose */
+  --bg-via: 340 100% 98%; /* Very light rose */
+  --bg-to: 330 100% 97%; /* Light rose variant */
+}
+
+.theme-orange {
+  --bg-from: 25 100% 95%; /* Light orange */
+  --bg-via: 35 100% 98%; /* Very light orange */
+  --bg-to: 25 100% 97%; /* Light orange variant */
+}
+
+.theme-pink {
+  --bg-from: 322 100% 95%; /* Light pink */
+  --bg-via: 330 100% 98%; /* Very light pink */
+  --bg-to: 322 100% 97%; /* Light pink variant */
+}
+
+.theme-indigo {
+  --bg-from: 239 100% 95%; /* Light indigo */
+  --bg-via: 250 100% 98%; /* Very light indigo */
+  --bg-to: 239 100% 97%; /* Light indigo variant */
+}
+
+.theme-cyan {
+  --bg-from: 189 100% 95%; /* Light cyan */
+  --bg-via: 200 100% 98%; /* Very light cyan */
+  --bg-to: 189 100% 97%; /* Light cyan variant */
 }
 
 .dark {

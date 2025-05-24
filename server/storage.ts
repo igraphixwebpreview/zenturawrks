@@ -101,30 +101,81 @@ export class MemStorage implements IStorage {
     };
     
     // Initialize default email template
-    const defaultTemplate: EmailTemplate = {
-      id: this.currentTemplateId++,
-      name: "Default Invoice Template",
-      subject: "Your Invoice from iGraphix Marketing & Co. - [Invoice #{invoice_number}]",
-      body: `Dear {client_name},
+    // Create default email templates for each invoice type
+    const defaultTemplates = [
+      {
+        id: this.currentTemplateId++,
+        name: "Quotation Email Template",
+        subject: "Your Quotation from {company_name} - #{invoice_number}",
+        body: `Dear {client_name},
 
-Please find attached your invoice #{invoice_number} for the services rendered.
+Thank you for your interest in our services. Please find attached your quotation #{invoice_number}.
 
-You can download your invoice using the button below. Thank you for your business.
+Quotation Details:
+- Quotation Number: {invoice_number}
+- Date: {invoice_date}
+- Valid Until: {due_date}
+- Total Amount: {total_amount}
+
+This quotation is valid for 30 days. Please review the details and let us know if you have any questions.
+
+Best regards,
+{company_name}`,
+        invoiceType: "quotation",
+        isDefault: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Final Invoice Email Template",
+        subject: "Invoice #{invoice_number} from {company_name}",
+        body: `Dear {client_name},
+
+Please find attached your invoice #{invoice_number} for the services completed.
 
 Invoice Details:
 - Invoice Number: {invoice_number}
 - Invoice Date: {invoice_date}
 - Due Date: {due_date}
-- Amount: {total_amount}
+- Amount Due: {total_amount}
+
+Payment is due by {due_date}. Thank you for your business!
 
 Best regards,
-iGraphix Marketing & Co.`,
-      isDefault: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+{company_name}`,
+        invoiceType: "final_invoice",
+        isDefault: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Receipt Email Template",
+        subject: "Payment Receipt #{invoice_number} from {company_name}",
+        body: `Dear {client_name},
+
+Thank you for your payment! Please find attached your receipt #{invoice_number}.
+
+Receipt Details:
+- Receipt Number: {invoice_number}
+- Payment Date: {invoice_date}
+- Amount Paid: {total_amount}
+
+We appreciate your prompt payment and continued business.
+
+Best regards,
+{company_name}`,
+        invoiceType: "receipt",
+        isDefault: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
     
-    this.emailTemplates.set(defaultTemplate.id, defaultTemplate);
+    defaultTemplates.forEach(template => {
+      this.emailTemplates.set(template.id, template);
+    });
     
     // Add demo clients for demo account
     this.createDemoClients();

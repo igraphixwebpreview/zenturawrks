@@ -1,5 +1,5 @@
-import { EmailTemplateEditor } from "@/components/templates/email-template-editor";
+import { EmailTemplateManager } from "@/components/templates/email-template-manager";
 
 export default function Templates() {
-  return <EmailTemplateEditor />;
+  return <EmailTemplateManager />;
 }

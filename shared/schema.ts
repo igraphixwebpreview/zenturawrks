@@ -61,6 +61,7 @@ export const emailTemplates = pgTable("email_templates", {
   name: text("name").notNull(),
   subject: text("subject").notNull(),
   body: text("body").notNull(),
+  invoiceType: text("invoice_type").notNull(),
   isDefault: boolean("is_default").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

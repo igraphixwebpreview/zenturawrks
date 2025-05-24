@@ -264,6 +264,112 @@ export function EmailTemplateManager() {
         </Button>
       </div>
 
+      {/* Create/Edit Template Section - Full Width */}
+      {(isCreating || selectedTemplateId) && (
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>
+              {isCreating ? "Create New Template" : "Edit Template"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Template Name</Label>
+                  <Input 
+                    id="name"
+                    {...form.register("name")}
+                    placeholder="Template name"
+                  />
+                  {form.formState.errors.name && (
+                    <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="invoiceType">Invoice Type</Label>
+                  <Select
+                    value={form.watch("invoiceType")}
+                    onValueChange={(value) => form.setValue("invoiceType", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {invoiceTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.invoiceType && (
+                    <p className="text-sm text-destructive">{form.formState.errors.invoiceType.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject Line Template</Label>
+                <Input 
+                  id="subject"
+                  {...form.register("subject")}
+                  placeholder="Email subject with variables like {client_name}"
+                />
+                {form.formState.errors.subject && (
+                  <p className="text-sm text-destructive">{form.formState.errors.subject.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="body">Email Body Template</Label>
+                <Textarea 
+                  id="body"
+                  {...form.register("body")}
+                  rows={8}
+                  placeholder="Email body with variables like {client_name}, {invoice_number}, etc."
+                />
+                {form.formState.errors.body && (
+                  <p className="text-sm text-destructive">{form.formState.errors.body.message}</p>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button 
+                  type="submit" 
+                  disabled={createTemplate.isPending || updateTemplate.isPending}
+                  className="btn-modern btn-primary flex-shrink-0"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {isCreating ? "Create Template" : "Update Template"}
+                </Button>
+                
+                {isCreating && (
+                  <Select
+                    value={selectedInvoiceType}
+                    onValueChange={(value) => {
+                      setSelectedInvoiceType(value);
+                      loadDefaultTemplate(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-full sm:w-48 flex-shrink-0">
+                      <SelectValue placeholder="Load default for..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {invoiceTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          Default {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Template List */}
         <div className="space-y-4">
@@ -323,145 +429,42 @@ export function EmailTemplateManager() {
           </Card>
         </div>
 
-        {/* Template Editor with Preview and Variables */}
+        {/* Preview and Variables */}
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {isCreating ? "Create New Template" : selectedTemplateId ? "Edit Template" : "Select a Template"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {(isCreating || selectedTemplateId) ? (
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Template Name</Label>
-                      <Input 
-                        id="name"
-                        {...form.register("name")}
-                        placeholder="Template name"
-                      />
-                      {form.formState.errors.name && (
-                        <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="invoiceType">Invoice Type</Label>
-                      <Select
-                        value={form.watch("invoiceType")}
-                        onValueChange={(value) => form.setValue("invoiceType", value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {invoiceTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {form.formState.errors.invoiceType && (
-                        <p className="text-sm text-destructive">{form.formState.errors.invoiceType.message}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="subject">Subject Line Template</Label>
-                    <Input 
-                      id="subject"
-                      {...form.register("subject")}
-                      placeholder="Email subject with variables like {client_name}"
-                    />
-                    {form.formState.errors.subject && (
-                      <p className="text-sm text-destructive">{form.formState.errors.subject.message}</p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="body">Email Body Template</Label>
-                    <Textarea 
-                      id="body"
-                      {...form.register("body")}
-                      rows={8}
-                      placeholder="Email body with variables like {client_name}, {invoice_number}, etc."
-                    />
-                    {form.formState.errors.body && (
-                      <p className="text-sm text-destructive">{form.formState.errors.body.message}</p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button 
-                      type="submit" 
-                      disabled={createTemplate.isPending || updateTemplate.isPending}
-                      className="btn-modern btn-primary flex-shrink-0"
-                    >
-                      <Save className="h-4 w-4 mr-2" />
-                      {isCreating ? "Create Template" : "Update Template"}
-                    </Button>
-                    
-                    {isCreating && (
-                      <Select
-                        value={selectedInvoiceType}
-                        onValueChange={(value) => {
-                          setSelectedInvoiceType(value);
-                          loadDefaultTemplate(value);
-                        }}
-                      >
-                        <SelectTrigger className="w-full sm:w-48 flex-shrink-0">
-                          <SelectValue placeholder="Load default for..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {invoiceTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              Default {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  </div>
-                </form>
-              ) : (
-                <div className="text-center py-8">
-                  <Mail className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">
-                    Select a template to edit or create a new one
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
           {/* Preview Section */}
           <Card>
             <CardHeader>
               <CardTitle>Preview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Subject:</Label>
-                  <div className="mt-1 p-3 bg-muted/50 rounded border">
-                    <p className="text-sm font-medium">{previewSubject || "Enter a subject template"}</p>
+              {(isCreating || selectedTemplateId) ? (
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Subject:</Label>
+                    <div className="mt-1 p-3 bg-muted/50 rounded border">
+                      <p className="text-sm font-medium">{previewSubject || "Enter a subject template"}</p>
+                    </div>
                   </div>
-                </div>
 
-                <Separator />
+                  <Separator />
 
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Body:</Label>
-                  <div className="mt-1 p-4 bg-muted/50 rounded border max-h-64 overflow-y-auto">
-                    <div className="text-sm whitespace-pre-wrap">
-                      {previewBody || "Enter a body template"}
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">Body:</Label>
+                    <div className="mt-1 p-4 bg-muted/50 rounded border max-h-64 overflow-y-auto">
+                      <div className="text-sm whitespace-pre-wrap">
+                        {previewBody || "Enter a body template"}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Mail className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">
+                    Select a template to see preview
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 

@@ -11,14 +11,25 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo }: WelcomeScreenProps) {
   const [isComplete, setIsComplete] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsComplete(true);
-      setTimeout(onComplete, 600);
-    }, 2000);
+    // Animate progress from 0 to 100
+    const progressInterval = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          setTimeout(() => {
+            setIsComplete(true);
+            setTimeout(onComplete, 600);
+          }, 200);
+          return 100;
+        }
+        return prev + 2; // Increment by 2% each time
+      });
+    }, 30); // Update every 30ms
 
-    return () => clearTimeout(timer);
+    return () => clearInterval(progressInterval);
   }, [onComplete]);
 
   return (
@@ -90,7 +101,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
               {companyName ? `Welcome back, ${companyName}` : `Hello, ${userEmail?.split('@')[0] || 'User'}`}
             </motion.p>
 
-            {/* Loading indicator */}
+            {/* Loading percentage counter */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -100,17 +111,8 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
               }}
               className="mt-8"
             >
-              <div className="w-8 h-1 bg-primary/20 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-primary rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{
-                    duration: 1.5,
-                    delay: 0.5,
-                    ease: "easeInOut"
-                  }}
-                />
+              <div className="text-primary font-medium text-lg">
+                {loadingProgress}%
               </div>
             </motion.div>
           </div>

@@ -40,9 +40,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
-      {/* Glassy overlay pattern */}
-      <div className="fixed inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 pointer-events-none" />
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-white dark:from-gray-950 dark:to-gray-900">
+      {/* Elegant mesh pattern */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(100,116,139,0.15)_1px,transparent_0)] [background-size:24px_24px] pointer-events-none" />
       
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
@@ -64,8 +64,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden relative z-10">
-        {/* Glassy header */}
-        <div className="flex h-16 items-center justify-between px-4 md:px-8 border-b border-white/20 backdrop-blur-xl bg-white/10">
+        {/* Clean modern header */}
+        <div className="flex h-16 items-center justify-between px-4 md:px-8 border-b border-slate-200 bg-white/80 backdrop-blur-sm dark:bg-gray-900/80 dark:border-gray-700">
           {/* Left side - Mobile menu or logo */}
           <div className="flex items-center gap-4">
             {isMobile && (
@@ -133,12 +133,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        {/* Glassy page content */}
+        {/* Content with floating cards */}
         <main className={`flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'p-2 pb-24' : 'p-4 md:p-8'}`}>
           <div className={`${isMobile ? 'w-full max-w-none' : 'max-w-6xl'} mx-auto`}>
-            <div className="backdrop-blur-sm bg-white/5 rounded-3xl p-6 border border-white/10">
-              {children}
-            </div>
+            {children}
           </div>
         </main>
       </div>

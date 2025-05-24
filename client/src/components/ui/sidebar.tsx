@@ -92,7 +92,6 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
             </div>
             <div>
               <h1 className="text-lg font-semibold text-foreground">InvoiceGen</h1>
-              <p className="text-xs text-muted-foreground">iGraphix Marketing & Co.</p>
             </div>
           </div>
         )}

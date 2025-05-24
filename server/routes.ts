@@ -6,6 +6,7 @@ import {
   insertInvoiceSchema, 
   insertEmailTemplateSchema, 
   insertSettingsSchema,
+  insertClientSchema,
   updateInvoiceStatusSchema,
   sendInvoiceSchema
 } from "@shared/schema";
@@ -591,6 +592,75 @@ INVITEM Service SERV    Service Item    0.00
         message: `Successfully sent ${results.sent} reminder emails`,
         results
       });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Client routes
+  app.get("/api/clients", requireAuth, async (req, res) => {
+    try {
+      const clients = await storage.getClients(req.user.id);
+      res.json(clients);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/clients/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const client = await storage.getClient(id, req.user.id);
+      
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json(client);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/clients", requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertClientSchema.parse({
+        ...req.body,
+        userId: req.user.id
+      });
+      
+      const client = await storage.createClient(validatedData);
+      res.status(201).json(client);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/clients/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const client = await storage.updateClient(id, req.body, req.user.id);
+      
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json(client);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/clients/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteClient(id, req.user.id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json({ message: "Client deleted successfully" });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

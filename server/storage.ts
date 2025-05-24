@@ -133,6 +133,49 @@ iGraphix Marketing & Co.`,
     this.createDemoInvoices();
   }
 
+  private createDemoClients() {
+    const demoUserId = 1;
+    
+    const client1: Client = {
+      id: this.currentClientId++,
+      userId: demoUserId,
+      name: "John Smith",
+      email: "john.smith@example.com",
+      phone: "+1 (555) 123-4567",
+      companyName: "Smith Enterprises",
+      addressLine1: "123 Main Street",
+      addressLine2: "Suite 200",
+      city: "New York",
+      state: "NY",
+      postalCode: "10001",
+      country: "United States",
+      notes: "Preferred communication via email",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    const client2: Client = {
+      id: this.currentClientId++,
+      userId: demoUserId,
+      name: "Sarah Johnson",
+      email: "sarah.johnson@techcorp.com",
+      phone: "+1 (555) 987-6543",
+      companyName: "TechCorp Solutions",
+      addressLine1: "456 Technology Blvd",
+      addressLine2: null,
+      city: "San Francisco",
+      state: "CA",
+      postalCode: "94105",
+      country: "United States",
+      notes: "Net 15 payment terms",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    this.clients.set(client1.id, client1);
+    this.clients.set(client2.id, client2);
+  }
+
   private createDemoInvoices() {
     const demoUserId = 1;
     
@@ -445,6 +488,63 @@ iGraphix Marketing & Co.`,
     };
 
     return this.settings;
+  }
+
+  // Client operations
+  async getClients(userId: number): Promise<Client[]> {
+    return Array.from(this.clients.values())
+      .filter(client => client.userId === userId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  async getClient(id: number, userId: number): Promise<Client | undefined> {
+    const client = this.clients.get(id);
+    return client && client.userId === userId ? client : undefined;
+  }
+
+  async createClient(insertClient: InsertClient): Promise<Client> {
+    const id = this.currentClientId++;
+    const now = new Date();
+    
+    const client: Client = {
+      ...insertClient,
+      id,
+      createdAt: now,
+      updatedAt: now,
+    };
+    
+    this.clients.set(id, client);
+    return client;
+  }
+
+  async updateClient(id: number, updateData: Partial<Client>, userId: number): Promise<Client | undefined> {
+    const existingClient = this.clients.get(id);
+    
+    if (!existingClient || existingClient.userId !== userId) {
+      return undefined;
+    }
+    
+    const updatedClient: Client = {
+      ...existingClient,
+      ...updateData,
+      id: existingClient.id,
+      userId: existingClient.userId,
+      createdAt: existingClient.createdAt,
+      updatedAt: new Date(),
+    };
+    
+    this.clients.set(id, updatedClient);
+    return updatedClient;
+  }
+
+  async deleteClient(id: number, userId: number): Promise<boolean> {
+    const client = this.clients.get(id);
+    
+    if (!client || client.userId !== userId) {
+      return false;
+    }
+    
+    return this.clients.delete(id);
   }
 }
 

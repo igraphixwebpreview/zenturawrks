@@ -36,7 +36,7 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
     <AnimatePresence>
       {!isComplete && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-950"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ 
@@ -44,22 +44,22 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
             transition: { duration: 0.6, ease: "easeInOut" }
           }}
         >
-          {/* Subtle background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+          {/* Clean minimal background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-white to-purple-50/20 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950/10" />
           
-          <div className="relative flex flex-col items-center justify-center text-center">
-            {/* Logo with elegant animation */}
+          <div className="relative flex flex-col items-center justify-center text-center max-w-md mx-auto px-6">
+            {/* Minimalist logo */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{
-                duration: 0.8,
+                duration: 0.7,
                 ease: "easeOut"
               }}
-              className="mb-8"
+              className="mb-12"
             >
               {companyLogo ? (
-                <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
+                <div className="w-20 h-20 rounded-3xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800">
                   <img 
                     src={companyLogo} 
                     alt="Company Logo" 
@@ -67,54 +67,53 @@ export function WelcomeScreen({ onComplete, companyName, userEmail, companyLogo 
                   />
                 </div>
               ) : (
-                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center shadow-lg">
-                  <Building2 className="w-8 h-8 text-white" />
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-sm">
+                  <Building2 className="w-10 h-10 text-white" />
                 </div>
               )}
             </motion.div>
 
-            {/* App name with clean typography */}
-            <motion.h1
+            {/* Clean app branding */}
+            <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
                 duration: 0.6,
-                delay: 0.3,
+                delay: 0.2,
                 ease: "easeOut"
               }}
-              className="text-3xl font-bold text-foreground mb-4"
+              className="mb-16"
             >
-              InvoiceGen
-            </motion.h1>
+              <h1 className="text-4xl font-light text-gray-900 dark:text-white mb-3 tracking-tight">
+                InvoiceGen
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 text-base font-light">
+                {companyName ? `Welcome back, ${companyName}` : `Hello, ${userEmail?.split('@')[0] || 'User'}`}
+              </p>
+            </motion.div>
 
-            {/* Personalized welcome */}
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.5,
-                ease: "easeOut"
-              }}
-              className="text-muted-foreground text-lg mb-8"
-            >
-              {companyName ? `Welcome back, ${companyName}` : `Hello, ${userEmail?.split('@')[0] || 'User'}`}
-            </motion.p>
-
-            {/* Loading percentage counter */}
+            {/* Minimal loading indicator */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{
                 duration: 0.4,
-                delay: 0.8
+                delay: 0.6
               }}
+              className="text-center"
             >
-              <div className="text-black dark:text-white font-semibold text-2xl">
-                {loadingProgress}%
+              {/* Simple progress bar */}
+              <div className="w-48 h-1 bg-gray-200 dark:bg-gray-800 rounded-full mb-4">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${loadingProgress}%` }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
               </div>
-              <div className="text-muted-foreground text-sm mt-2">
-                Setting up your workspace...
+              
+              <div className="text-gray-400 dark:text-gray-500 text-sm font-light">
+                Setting up your workspace
               </div>
             </motion.div>
           </div>

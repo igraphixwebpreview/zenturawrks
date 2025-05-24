@@ -3,6 +3,7 @@ import {
   invoices, 
   emailTemplates, 
   settings,
+  clients,
   type User, 
   type InsertUser,
   type Invoice,
@@ -10,7 +11,9 @@ import {
   type EmailTemplate,
   type InsertEmailTemplate,
   type Settings,
-  type InsertSettings
+  type InsertSettings,
+  type Client,
+  type InsertClient
 } from "@shared/schema";
 
 export interface IStorage {
@@ -32,6 +35,13 @@ export interface IStorage {
     deposited: number;
   }>;
   
+  // Client operations
+  getClients(userId: number): Promise<Client[]>;
+  getClient(id: number, userId: number): Promise<Client | undefined>;
+  createClient(client: InsertClient): Promise<Client>;
+  updateClient(id: number, client: Partial<Client>, userId: number): Promise<Client | undefined>;
+  deleteClient(id: number, userId: number): Promise<boolean>;
+  
   // Email template operations
   getEmailTemplates(): Promise<EmailTemplate[]>;
   getEmailTemplate(id: number): Promise<EmailTemplate | undefined>;
@@ -48,18 +58,22 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private invoices: Map<number, Invoice>;
   private emailTemplates: Map<number, EmailTemplate>;
+  private clients: Map<number, Client>;
   private settings: Settings | undefined;
   private currentUserId: number;
   private currentInvoiceId: number;
   private currentTemplateId: number;
+  private currentClientId: number;
 
   constructor() {
     this.users = new Map();
     this.invoices = new Map();
     this.emailTemplates = new Map();
+    this.clients = new Map();
     this.currentUserId = 1;
     this.currentInvoiceId = 1;
     this.currentTemplateId = 1;
+    this.currentClientId = 1;
     
     // Create demo user account
     const demoUser: User = {
@@ -111,6 +125,9 @@ iGraphix Marketing & Co.`,
     };
     
     this.emailTemplates.set(defaultTemplate.id, defaultTemplate);
+    
+    // Add demo clients for demo account
+    this.createDemoClients();
     
     // Add sample invoices for demo account
     this.createDemoInvoices();

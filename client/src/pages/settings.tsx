@@ -316,22 +316,14 @@ export default function Settings() {
               )}
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="displayName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Display Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter your display name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="displayName">Display Name</Label>
+                  <Input 
+                    id="displayName"
+                    placeholder="Enter your display name"
+                    {...form.register('displayName')}
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="profileEmail">Email Address</Label>
                   <Input 

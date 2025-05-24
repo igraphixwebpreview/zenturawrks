@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import { signIn, signUp, signOut, createUserProfile, getUserProfile, type User } from "@/lib/firebase-auth";
+import { signIn, signUp, signOut, getCurrentUser, registerUser, type User } from "@/lib/auth";
 import { auth } from "@/lib/firebase";
 import { useQueryClient } from "@tanstack/react-query";
 

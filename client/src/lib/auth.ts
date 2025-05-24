@@ -14,6 +14,8 @@ export interface User {
   firebaseUid: string;
   isAdmin: boolean;
   createdAt: Date;
+  photoURL?: string | null;
+  displayName?: string | null;
 }
 
 export const signIn = async (email: string, password: string): Promise<void> => {

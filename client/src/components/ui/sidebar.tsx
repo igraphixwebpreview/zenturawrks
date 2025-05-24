@@ -108,7 +108,7 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
                 variant="ghost"
                 size="sm"
                 onClick={onToggle}
-                className="absolute -right-2 w-6 h-6 p-0"
+                className="absolute right-1 w-5 h-5 p-0 opacity-60 hover:opacity-100"
               >
                 <ChevronRight className="h-3 w-3" />
               </Button>

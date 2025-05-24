@@ -15,9 +15,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
-import { uploadProfilePicture, validateImageFile } from "@/lib/profile-upload";
+import { uploadProfilePicture, validateImageFile, updateDisplayName } from "@/lib/profile-upload";
 
 const settingsSchema = z.object({
+  displayName: z.string().min(1, "Display name is required"),
   companyName: z.string().min(1, "Company name is required"),
   companyAddress: z.string().min(1, "Company address is required"),
   companyPhone: z.string().optional(),
@@ -39,6 +40,7 @@ export default function Settings() {
   const form = useForm<SettingsForm>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
+      displayName: user?.displayName || "User",
       companyName: "Your Company",
       companyAddress: "123 Business Street\nCity, State 12345",
       companyPhone: "+1 (555) 123-4567",
@@ -83,12 +85,31 @@ export default function Settings() {
     }
   };
 
-  const onSubmit = (data: SettingsForm) => {
-    // For now, just show success message
-    toast({
-      title: "Settings updated",
-      description: "Your settings have been saved successfully.",
-    });
+  const onSubmit = async (data: SettingsForm) => {
+    try {
+      // Update display name if it changed
+      if (data.displayName !== user?.displayName) {
+        await updateDisplayName(data.displayName);
+      }
+      
+      // TODO: Save other settings to database when backend is ready
+      
+      toast({
+        title: "Settings updated",
+        description: "Your settings have been saved successfully.",
+      });
+      
+      // Refresh the page to show updated display name everywhere
+      window.location.reload();
+      
+    } catch (error: any) {
+      console.error("Settings update error:", error);
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update settings. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -287,14 +308,22 @@ export default function Settings() {
               )}
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="displayName">Display Name</Label>
-                  <Input 
-                    id="displayName"
-                    placeholder="Enter your display name"
-                    defaultValue={user?.displayName || user?.email.split('@')[0] || ''}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="displayName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Display Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter your display name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="space-y-2">
                   <Label htmlFor="profileEmail">Email Address</Label>
                   <Input 

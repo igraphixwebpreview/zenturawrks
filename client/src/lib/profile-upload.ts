@@ -33,6 +33,22 @@ export const uploadProfilePicture = async (file: File): Promise<string> => {
   }
 };
 
+export const updateDisplayName = async (displayName: string): Promise<void> => {
+  if (!auth.currentUser) {
+    throw new Error("No authenticated user");
+  }
+
+  try {
+    // Update the user's profile with the new display name
+    await updateProfile(auth.currentUser, {
+      displayName: displayName
+    });
+  } catch (error) {
+    console.error("Error updating display name:", error);
+    throw error;
+  }
+};
+
 export const validateImageFile = (file: File): boolean => {
   // Check file type
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];

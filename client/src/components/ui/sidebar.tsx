@@ -98,24 +98,33 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
             </div>
           </div>
         )}
-        {collapsed && (
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto shadow-lg">
-            <span className="text-xs font-bold text-primary-foreground">IG</span>
-          </div>
-        )}
-        {onToggle && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggle}
-            className="ml-auto"
-          >
-            {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <ChevronLeft className="h-4 w-4" />
+        {collapsed ? (
+          <div className="flex items-center justify-center w-full relative">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-xs font-bold text-primary-foreground">IG</span>
+            </div>
+            {onToggle && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggle}
+                className="absolute -right-2 w-6 h-6 p-0"
+              >
+                <ChevronRight className="h-3 w-3" />
+              </Button>
             )}
-          </Button>
+          </div>
+        ) : (
+          onToggle && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggle}
+              className="ml-auto"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          )
         )}
       </div>
 

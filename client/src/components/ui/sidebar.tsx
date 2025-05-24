@@ -13,7 +13,8 @@ import {
   Clock,
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Users
 } from "lucide-react";
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
@@ -38,6 +39,11 @@ const navigationItems = [
     title: "All Invoices",
     href: "/invoices", 
     icon: FileText,
+  },
+  {
+    title: "Clients",
+    href: "/clients",
+    icon: Users,
   },
   {
     title: "Email Templates",

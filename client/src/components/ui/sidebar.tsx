@@ -97,8 +97,8 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
           </div>
         )}
         {collapsed && (
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto shadow-lg">
-            <span className="text-xs font-bold text-primary-foreground">IG</span>
+          <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mx-auto shadow-lg">
+            <span className="text-sm font-bold text-primary-foreground">IG</span>
           </div>
         )}
         {onToggle && (

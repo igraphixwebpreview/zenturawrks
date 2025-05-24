@@ -99,20 +99,18 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
           </div>
         )}
         {collapsed ? (
-          <div className="flex items-center justify-center w-full relative">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg">
+          <div className="flex items-center justify-center w-full">
+            <div 
+              className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg relative cursor-pointer hover:scale-105 transition-transform"
+              onClick={onToggle}
+            >
               <span className="text-xs font-bold text-primary-foreground">IG</span>
+              {onToggle && (
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-background border border-border rounded-full flex items-center justify-center">
+                  <ChevronRight className="h-2 w-2 text-muted-foreground" />
+                </div>
+              )}
             </div>
-            {onToggle && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onToggle}
-                className="absolute right-1 w-5 h-5 p-0 opacity-60 hover:opacity-100"
-              >
-                <ChevronRight className="h-3 w-3" />
-              </Button>
-            )}
           </div>
         ) : (
           onToggle && (

@@ -11,6 +11,7 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { ThemeCustomizer } from "@/components/ui/theme-customizer";
 import { WelcomeScreen } from "@/components/ui/welcome-screen";
+import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
 import { Button } from "@/components/ui/button";
 import { Menu, Plus, Home, FileText, Bell, Mail, BarChart3, Settings as SettingsIcon, Zap, Send, Download, Layers, LogOut } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -171,7 +172,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
 function AuthenticatedApp() {
   const [location, setLocation] = useLocation();
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return localStorage.getItem('onboarding-complete') !== 'true';
+  });
   const [companyLogo, setCompanyLogo] = useState<string | null>(null);
   const { user } = useAuth();
   
@@ -183,12 +186,10 @@ function AuthenticatedApp() {
     }
   }, []);
   
-  if (showWelcome) {
+  if (showOnboarding) {
     return (
-      <WelcomeScreen 
-        onComplete={() => setShowWelcome(false)}
-        userEmail={user?.email}
-        companyLogo={companyLogo || undefined}
+      <OnboardingFlow 
+        onComplete={() => setShowOnboarding(false)}
       />
     );
   }

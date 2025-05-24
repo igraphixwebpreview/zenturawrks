@@ -176,7 +176,7 @@ export function WelcomeCompleteStep({ data, onNext, isAdmin }: WelcomeCompleteSt
       </CardContent>
       
       {/* Fixed Navigation at bottom */}
-      <div className="flex justify-center items-center p-6 border-t-2 border-gray-200/50 dark:border-gray-700/50 bg-white/80 backdrop-blur-xl shadow-lg">
+      <div className="flex justify-center items-center p-6 mt-4">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

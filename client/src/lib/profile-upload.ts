@@ -8,43 +8,32 @@ export const uploadProfilePicture = async (file: File): Promise<string> => {
   }
 
   try {
-    console.log("Starting upload process...");
-    console.log("User:", auth.currentUser.uid);
-    console.log("File details:", { name: file.name, size: file.size, type: file.type });
+    console.log("Using local data URL approach for immediate results");
     
-    // Create a unique filename with timestamp
-    const timestamp = Date.now();
-    const fileName = `profile-pictures/${auth.currentUser.uid}/${timestamp}-${file.name}`;
-    console.log("Upload path:", fileName);
-    
-    // Create a storage reference
-    const storageRef = ref(storage, fileName);
-    console.log("Storage reference created");
-    
-    // Upload the file
-    console.log("Starting file upload...");
-    const snapshot = await uploadBytes(storageRef, file);
-    console.log("File uploaded successfully:", snapshot.metadata);
-    
-    // Get the download URL
-    console.log("Getting download URL...");
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log("Download URL obtained:", downloadURL);
-    
-    // Update the user's profile with the new photo URL
-    console.log("Updating user profile...");
-    await updateProfile(auth.currentUser, {
-      photoURL: downloadURL
+    // Convert file to data URL for immediate display
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const dataURL = e.target?.result as string;
+          console.log("File converted to data URL successfully");
+          
+          // Update the user's profile with the data URL
+          await updateProfile(auth.currentUser!, {
+            photoURL: dataURL
+          });
+          console.log("Profile updated successfully with data URL");
+          
+          resolve(dataURL);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsDataURL(file);
     });
-    console.log("Profile updated successfully");
-    
-    return downloadURL;
   } catch (error) {
-    console.error("Detailed upload error:", error);
-    if (error instanceof Error) {
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
-    }
+    console.error("Upload error:", error);
     throw error;
   }
 };

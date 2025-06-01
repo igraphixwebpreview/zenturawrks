@@ -2,36 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 240 10% 96%;
-  --foreground: 240 10% 9%;
-  --card: 0 0% 100% / 0.7;
-  --card-foreground: 240 10% 9%;
-  --popover: 0 0% 100% / 0.8;
-  --popover-foreground: 240 10% 9%;
-  --primary: 222 100% 38%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 240 5% 96%;
-  --secondary-foreground: 240 6% 10%;
-  --muted: 240 5% 96%;
-  --muted-foreground: 240 4% 46%;
-  --accent: 222 100% 95%;
-  --accent-foreground: 222 100% 38%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 240 5% 84%;
-  --input: 240 5% 84%;
-  --ring: 222 100% 38%;
-  --radius: 0.5rem;
-}
-
 @layer base {
+  :root {
+    --background: 240 10% 96%;
+    --foreground: 240 10% 9%;
+    --card: 0 0% 100% / 0.7;
+    --card-foreground: 240 10% 9%;
+    --popover: 0 0% 100% / 0.8;
+    --popover-foreground: 240 10% 9%;
+    --primary: 222 100% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 222 100% 95%;
+    --accent-foreground: 222 100% 38%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --radius: 0.5rem;
+  }
+
   * {
     @apply border-gray-200 dark:border-gray-800;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
@@ -58,24 +55,24 @@
   }
   
   .modern-card {
-    @apply relative overflow-hidden rounded-3xl bg-card border border-gray-200 dark:border-gray-800 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 hover:border-primary/30;
+    @apply relative overflow-hidden rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 hover:border-blue-500/30;
   }
   
   .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 rounded-t-3xl px-4 py-3;
+    @apply fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 rounded-t-3xl px-4 py-3;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700;
+    @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600;
   }
 }
 
 @layer utilities {
   .scrollbar-thumb {
-    @apply bg-gray-200 dark:bg-gray-800 rounded-full;
+    @apply bg-gray-200 dark:bg-gray-700 rounded-full;
   }
   
   .scrollbar-thumb:hover {
-    @apply bg-gray-300 dark:bg-gray-700;
+    @apply bg-gray-300 dark:bg-gray-600;
   }
 } 

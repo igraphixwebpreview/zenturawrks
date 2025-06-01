@@ -3,46 +3,42 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-gray-200 dark:border-gray-800;
-  }
-
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50;
+    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply backdrop-blur-xl bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 rounded-3xl shadow-xl;
+    @apply bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-lg shadow;
   }
   
   .glass-sidebar {
-    @apply backdrop-blur-2xl bg-white/10 border-r border-white/20 shadow-2xl;
+    @apply bg-white/90 dark:bg-gray-800/90 border-r border-gray-200 dark:border-gray-700;
   }
   
   .glass-nav {
-    @apply backdrop-blur-xl bg-white/15 border border-white/25 rounded-2xl shadow-lg;
+    @apply bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 rounded-lg;
   }
   
   .glass-input {
-    @apply backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg;
   }
   
   .glass-button {
-    @apply backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl hover:bg-white/30 transition-all duration-300;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700;
   }
   
   .modern-card {
-    @apply relative overflow-hidden rounded-3xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 hover:border-blue-500/30;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow hover:shadow-lg;
   }
   
   .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 rounded-t-3xl px-4 py-3;
+    @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
   }
   
   .btn-secondary {
-    @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600;
+    @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700;
   }
 }
 

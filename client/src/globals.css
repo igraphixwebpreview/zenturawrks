@@ -3,33 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 240 10% 96%;
-    --foreground: 240 10% 9%;
-    --card: 0 0% 100% / 0.7;
-    --card-foreground: 240 10% 9%;
-    --popover: 0 0% 100% / 0.8;
-    --popover-foreground: 240 10% 9%;
-    --primary: 222 100% 38%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 6% 10%;
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
-    --accent: 222 100% 95%;
-    --accent-foreground: 222 100% 38%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --radius: 0.5rem;
-  }
-
   * {
     @apply border-gray-200 dark:border-gray-800;
   }
 
   body {
     @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
+import typography from '@tailwindcss/typography'
 
 export default defineConfig({
   plugins: [react()],
@@ -68,7 +69,7 @@ export default defineConfig({
             },
           },
           plugins: [
-            require('@tailwindcss/typography'),
+            typography,
           ],
         }),
         autoprefixer(),

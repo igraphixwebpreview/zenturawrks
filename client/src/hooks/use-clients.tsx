@@ -2,18 +2,35 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Client, InsertClient } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { setupAuthHeaders } from "@/lib/auth";
 
 export const useClients = () => {
   return useQuery({
     queryKey: ["/api/clients"],
-    queryFn: () => apiRequest({ url: "/api/clients", on401: "throw" }),
+    queryFn: async () => {
+      const headers = await setupAuthHeaders();
+      const response = await fetch("/api/clients", {
+        headers,
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch clients");
+      return response.json();
+    },
   });
 };
 
 export const useClient = (id: number) => {
   return useQuery({
     queryKey: ["/api/clients", id],
-    queryFn: () => apiRequest({ url: `/api/clients/${id}`, on401: "throw" }),
+    queryFn: async () => {
+      const headers = await setupAuthHeaders();
+      const response = await fetch(`/api/clients/${id}`, {
+        headers,
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch client");
+      return response.json();
+    },
     enabled: !!id,
   });
 };
@@ -24,7 +41,18 @@ export const useCreateClient = () => {
 
   return useMutation({
     mutationFn: async (client: InsertClient) => {
-      return apiRequest("/api/clients", "POST", client);
+      const headers = await setupAuthHeaders();
+      const response = await fetch("/api/clients", {
+        method: "POST",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(client),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to create client");
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
@@ -49,7 +77,18 @@ export const useUpdateClient = () => {
 
   return useMutation({
     mutationFn: async ({ id, client }: { id: number; client: Partial<Client> }) => {
-      return apiRequest(`/api/clients/${id}`, "PATCH", client);
+      const headers = await setupAuthHeaders();
+      const response = await fetch(`/api/clients/${id}`, {
+        method: "PATCH",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(client),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to update client");
+      return response.json();
     },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
@@ -75,7 +114,14 @@ export const useDeleteClient = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest(`/api/clients/${id}`, "DELETE");
+      const headers = await setupAuthHeaders();
+      const response = await fetch(`/api/clients/${id}`, {
+        method: "DELETE",
+        headers,
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to delete client");
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });

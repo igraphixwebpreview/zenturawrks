@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "invgen": "invoicegen-59c56",
+    "default": "invoicegen-59c56"
+  },
+  "targets": {},
+  "etags": {}
+}

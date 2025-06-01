@@ -15,7 +15,19 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
-interface ClientFormData extends InsertClient {}
+interface ClientFormData extends InsertClient {
+  name: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  notes: string;
+}
 
 function ClientForm({ client, onSuccess }: { client?: Client; onSuccess: () => void }) {
   const { toast } = useToast();
@@ -232,6 +244,22 @@ function ClientForm({ client, onSuccess }: { client?: Client; onSuccess: () => v
   );
 }
 
+function ClientFormDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Add New Client</DialogTitle>
+          <DialogDescription>
+            Enter client information and contact details.
+          </DialogDescription>
+        </DialogHeader>
+        <ClientForm onSuccess={() => onOpenChange(false)} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function ClientCard({ client }: { client: Client }) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -355,101 +383,50 @@ export default function Clients() {
     (client.companyName && client.companyName.toLowerCase().includes(searchTerm.toLowerCase()))
   ) || [];
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <Skeleton className="h-8 w-32 mb-2" />
-            <Skeleton className="h-4 w-64" />
-          </div>
-          <Skeleton className="h-10 w-32" />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 w-full" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            Clients
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your client information and contact details
-          </p>
+          <h1 className="text-3xl font-bold">Clients</h1>
+          <p className="text-muted-foreground">Manage your client contacts</p>
         </div>
-        
-        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-          <DialogTrigger asChild>
-            <Button className="glass-button">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Client
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add New Client</DialogTitle>
-              <DialogDescription>
-                Enter client information and contact details.
-              </DialogDescription>
-            </DialogHeader>
-            <ClientForm onSuccess={() => setShowCreateDialog(false)} />
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => setShowCreateDialog(true)}>
+          Add Client
+        </Button>
       </div>
 
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search clients by name, email, or company..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 glass-input"
+            className="pl-10"
           />
         </div>
       </div>
-
-      {filteredClients.length === 0 ? (
-        <Card className="border-0 shadow-lg backdrop-blur-md bg-white/20">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <User className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">
-              {searchTerm ? "No clients found" : "No clients yet"}
-            </h3>
-            <p className="text-muted-foreground text-center mb-6">
-              {searchTerm 
-                ? "Try adjusting your search terms or add a new client."
-                : "Get started by adding your first client."
-              }
-            </p>
-            {!searchTerm && (
-              <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-                <DialogTrigger asChild>
-                  <Button className="glass-button">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Your First Client
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
-            )}
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredClients.map((client: Client) => (
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 w-full" />
+          ))
+        ) : filteredClients.length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-muted-foreground">No clients found</p>
+          </div>
+        ) : (
+          filteredClients.map((client: Client) => (
             <ClientCard key={client.id} client={client} />
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
+
+      <ClientFormDialog
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+      />
     </div>
   );
 }

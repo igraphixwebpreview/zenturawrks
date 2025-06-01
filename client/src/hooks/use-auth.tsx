@@ -1,89 +1,46 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import { signIn, signUp, signOut, getCurrentUser, registerUser, type User } from "@/lib/auth";
+import { onAuthStateChanged, User as FirebaseUser, signOut as firebaseSignOut } from "firebase/auth";
+import { signIn, signUp, getCurrentUser, registerUser, type User } from "@/lib/auth";
 import { auth } from "@/lib/firebase";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface AuthContextType {
-  firebaseUser: FirebaseUser | null;
-  user: User | null;
+  user: FirebaseUser | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  // Provide a default signOut that does nothing, for initial context value
+  signOut: async () => {},
+});
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setFirebaseUser(firebaseUser);
-      
-      if (firebaseUser) {
-        // Check for locally stored profile picture
-        const storageKey = `profile_picture_${firebaseUser.uid}`;
-        const storedPhotoURL = localStorage.getItem(storageKey);
-        
-        // Create user object directly from Firebase Auth data
-        const userProfile: User = {
-          id: 1, // Simple ID for compatibility
-          email: firebaseUser.email || '',
-          firebaseUid: firebaseUser.uid,
-          isAdmin: true, // Set as admin for now
-          createdAt: new Date(firebaseUser.metadata.creationTime || Date.now()),
-          photoURL: storedPhotoURL || firebaseUser.photoURL || null,
-          displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User'
-        };
-        setUser(userProfile);
-      } else {
-        setUser(null);
-      }
-      
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [queryClient]);
-
-  const handleSignIn = async (email: string, password: string) => {
-    await signIn(email, password);
-  };
-
-  const handleSignUp = async (email: string, password: string) => {
-    await signUp(email, password);
-  };
+  }, []);
 
   const handleSignOut = async () => {
-    await signOut();
-    queryClient.clear();
+    await firebaseSignOut(auth);
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        firebaseUser,
-        user: (user as User) || null,
-        loading,
-        signIn: handleSignIn,
-        signUp: handleSignUp,
-        signOut: handleSignOut,
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading, signOut: handleSignOut }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  return useContext(AuthContext);
 };

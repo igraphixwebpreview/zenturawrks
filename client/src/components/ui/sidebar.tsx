@@ -18,10 +18,13 @@ import {
 } from "lucide-react";
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfilePicture } from "@/hooks/use-profile-picture";
+import { getProfilePictureUrl, getInitials } from "@/lib/profile-upload";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   collapsed?: boolean;
   onToggle?: () => void;
+  onSignOut?: () => void;
 }
 
 const navigationItems = [
@@ -67,22 +70,36 @@ const navigationItems = [
   },
 ];
 
-export function Sidebar({ className, collapsed = false, onToggle, ...props }: SidebarProps) {
+export function Sidebar({ className, collapsed = false, onToggle, onSignOut, ...props }: SidebarProps) {
   const [location] = useLocation();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
+  const { profilePicture } = useProfilePicture();
+  const [imageUrl, setImageUrl] = React.useState<string>('');
+
+  React.useEffect(() => {
+    const loadImageUrl = async () => {
+      if (profilePicture) {
+        try {
+          const url = await getProfilePictureUrl({ photoURL: profilePicture });
+          setImageUrl(url);
+        } catch (error) {
+          console.error('Error loading profile picture:', error);
+        }
+      }
+    };
+    loadImageUrl();
+  }, [profilePicture]);
 
   const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error("Error signing out:", error);
+    if (onSignOut) {
+      await onSignOut();
     }
   };
 
   return (
     <div
       className={cn(
-        "flex h-screen flex-col backdrop-blur-2xl bg-white/20 border-r border-white/30 shadow-2xl",
+        "flex h-full flex-col backdrop-blur-2xl bg-white/20 border-r border-white/30 shadow-2xl",
         collapsed ? "w-16" : "w-64",
         "transition-all duration-300 ease-in-out relative z-10",
         className
@@ -96,27 +113,46 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
       )}>
         {!collapsed && (
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-xs font-bold text-primary-foreground">IG</span>
-            </div>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">InvoiceGen</h1>
+              <h1 className="text-lg font-semibold text-foreground">
+                {user?.displayName ? `Hello, ${user.displayName.split(' ')[0]}!` : 'InvoiceGen'}
+              </h1>
             </div>
           </div>
         )}
         {collapsed ? (
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-between w-full px-2">
+            {/* User Profile Picture/Initials (Collapsed) */}
             <div 
-              className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg relative cursor-pointer hover:scale-105 transition-transform"
+              className="w-7 h-7 bg-primary rounded-full flex items-center justify-center overflow-hidden shadow-lg cursor-pointer hover:scale-105 transition-transform flex-shrink-0"
               onClick={onToggle}
+              title={user?.displayName || user?.email || ''}
             >
-              <span className="text-xs font-bold text-primary-foreground">IG</span>
-              {onToggle && (
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-background border border-border rounded-full flex items-center justify-center">
-                  <ChevronRight className="h-2 w-2 text-muted-foreground" />
-                </div>
+              {imageUrl ? (
+                <img 
+                  src={imageUrl} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xs font-medium text-primary-foreground">
+                  {getInitials(user?.displayName || '')}
+                </span>
               )}
             </div>
+            
+            {/* Toggle Arrow Button (Collapsed) */}
+            {onToggle && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                onClick={onToggle}
+                title="Expand sidebar"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         ) : (
           onToggle && (
@@ -163,19 +199,19 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
       <Separator />
 
       {/* User Section */}
-      <div className="p-2">
+      <div className="mt-auto p-4">
         {!collapsed && user && (
-          <div className="flex items-center space-x-3 px-3 py-2 mb-2">
+          <div className="flex items-center space-x-3 mb-2">
             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center overflow-hidden">
-              {user.photoURL ? (
+              {imageUrl ? (
                 <img 
-                  src={user.photoURL} 
+                  src={imageUrl} 
                   alt="Profile" 
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <span className="text-xs font-medium text-primary-foreground">
-                  {user.displayName?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
+                  {getInitials(user.displayName || '')}
                 </span>
               )}
             </div>
@@ -184,7 +220,7 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
                 {user.displayName || user.email}
               </p>
               <p className="text-xs text-muted-foreground">
-                {user.isAdmin ? 'Admin' : 'User'} • {user.email}
+                {user.email}
               </p>
             </div>
           </div>
@@ -194,7 +230,7 @@ export function Sidebar({ className, collapsed = false, onToggle, ...props }: Si
           variant="ghost"
           className={cn(
             "w-full justify-start text-muted-foreground hover:text-foreground",
-            collapsed ? "px-2" : "px-3"
+            collapsed ? "px-2" : "px-0"
           )}
           onClick={handleSignOut}
           title={collapsed ? "Sign out" : undefined}

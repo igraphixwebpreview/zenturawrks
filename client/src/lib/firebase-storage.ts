@@ -10,18 +10,91 @@ import {
   where,
   orderBy,
   serverTimestamp,
-  Timestamp
+  Timestamp,
+  setDoc
 } from "firebase/firestore";
 import { db } from "./firebase";
 import type { User, Invoice, Client, EmailTemplate, Settings } from "@shared/schema";
+
+// Firebase-specific types that match our schema
+type FirebaseUser = Omit<User, "id" | "createdAt"> & {
+  id: string;
+  createdAt: Timestamp;
+};
+
+type FirebaseInvoice = Omit<Invoice, "id" | "createdAt" | "updatedAt"> & {
+  id: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+};
+
+type FirebaseClient = Omit<Client, "id" | "createdAt" | "updatedAt"> & {
+  id: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+};
+
+type FirebaseEmailTemplate = Omit<EmailTemplate, "id" | "createdAt" | "updatedAt"> & {
+  id: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+};
+
+type FirebaseSettings = Omit<Settings, "id" | "updatedAt"> & {
+  id: string;
+  userId: string;
+  updatedAt: Timestamp;
+};
 
 // Collections
 const COLLECTIONS = {
   users: "users",
   invoices: "invoices", 
   clients: "clients",
-  emailTemplates: "emailTemplates",
+  emailTemplates: "email_templates",
   settings: "settings"
+};
+
+// Helper function to convert Firebase data to schema types
+const convertToSchemaType = <T extends { id: string; createdAt: Timestamp; updatedAt?: Timestamp }>(
+  data: T,
+  type: "user" | "invoice" | "client" | "emailTemplate" | "settings"
+): any => {
+  const base = {
+    id: 1, // We'll use a fixed ID since we're using Firebase
+    createdAt: data.createdAt.toDate(),
+    ...(data.updatedAt && { updatedAt: data.updatedAt.toDate() })
+  };
+
+  switch (type) {
+    case "user":
+      return {
+        ...base,
+        email: (data as FirebaseUser).email,
+        firebaseUid: (data as FirebaseUser).firebaseUid,
+        isAdmin: (data as FirebaseUser).isAdmin
+      } as User;
+    case "invoice":
+      return {
+        ...base,
+        ...(data as FirebaseInvoice)
+      } as Invoice;
+    case "client":
+      return {
+        ...base,
+        ...(data as FirebaseClient)
+      } as Client;
+    case "emailTemplate":
+      return {
+        ...base,
+        ...(data as FirebaseEmailTemplate)
+      } as EmailTemplate;
+    case "settings":
+      return {
+        ...base,
+        ...(data as FirebaseSettings)
+      } as Settings;
+  }
 };
 
 // User operations
@@ -190,56 +263,124 @@ export const deleteEmailTemplate = async (templateId: string): Promise<void> => 
 
 // Settings operations
 export const getSettings = async (userId: string): Promise<Settings | null> => {
-  const q = query(
-    collection(db, COLLECTIONS.settings),
-    where("userId", "==", userId)
-  );
-  
-  const querySnapshot = await getDocs(q);
-  if (querySnapshot.empty) return null;
-  
-  const doc = querySnapshot.docs[0];
-  const data = doc.data();
-  return {
-    id: doc.id,
-    ...data,
-    updatedAt: data.updatedAt?.toDate()
-  } as Settings;
+  try {
+    console.log("Getting settings for user:", userId);
+    const q = query(
+      collection(db, COLLECTIONS.settings),
+      where("userId", "==", userId)
+    );
+    
+    const querySnapshot = await getDocs(q);
+    console.log("Settings query result:", querySnapshot.empty ? "No settings found" : "Settings found");
+    
+    if (querySnapshot.empty) {
+      console.log("Creating default settings for user:", userId);
+      // Create default settings if none exist
+      const defaultSettings = {
+        userId,
+        companyName: "Your Company",
+        companyAddress: "123 Business Street\nCity, State 12345",
+        companyPhone: "+1 (555) 123-4567",
+        companyEmail: "",
+        invoicePrefix: "INV-",
+        nextInvoiceNumber: 1,
+        defaultVat: "0.00",
+        paymentTerms: 30,
+        updatedAt: serverTimestamp()
+      };
+      
+      // Create a new document with a fixed ID for settings
+      const docRef = doc(db, COLLECTIONS.settings, userId);
+      await setDoc(docRef, defaultSettings);
+      
+      // Return the default settings directly without querying again
+      return {
+        id: 1,
+        companyName: defaultSettings.companyName,
+        companyAddress: defaultSettings.companyAddress,
+        companyPhone: defaultSettings.companyPhone,
+        companyEmail: defaultSettings.companyEmail,
+        invoicePrefix: defaultSettings.invoicePrefix,
+        nextInvoiceNumber: defaultSettings.nextInvoiceNumber,
+        defaultVat: defaultSettings.defaultVat,
+        paymentTerms: defaultSettings.paymentTerms,
+        updatedAt: new Date()
+      } as Settings;
+    }
+    
+    const doc = querySnapshot.docs[0];
+    const data = doc.data();
+    console.log("Retrieved settings data:", data);
+    
+    // Convert defaultVat to a string with 2 decimal places
+    const defaultVat = data.defaultVat ? parseFloat(data.defaultVat).toFixed(2) : "0.00";
+    
+    return {
+      id: 1,
+      companyName: data.companyName || "Your Company",
+      companyAddress: data.companyAddress || "123 Business Street\nCity, State 12345",
+      companyPhone: data.companyPhone || "+1 (555) 123-4567",
+      companyEmail: data.companyEmail || "",
+      invoicePrefix: data.invoicePrefix || "INV-",
+      nextInvoiceNumber: data.nextInvoiceNumber || 1,
+      defaultVat,
+      paymentTerms: data.paymentTerms || 30,
+      updatedAt: data.updatedAt?.toDate() || new Date()
+    } as Settings;
+  } catch (error) {
+    console.error("Error in getSettings:", error);
+    throw error;
+  }
 };
 
 export const updateSettings = async (userId: string, settingsData: Partial<Settings>): Promise<Settings> => {
-  // First try to find existing settings
-  const existingSettings = await getSettings(userId);
-  
-  if (existingSettings) {
-    // Update existing
-    const settingsRef = doc(db, COLLECTIONS.settings, existingSettings.id);
-    await updateDoc(settingsRef, {
-      ...settingsData,
-      updatedAt: serverTimestamp()
-    });
+  try {
+    console.log("Updating settings for user:", userId);
     
-    const updatedDoc = await getDoc(settingsRef);
+    // Convert defaultVat to a string with 2 decimal places
+    const defaultVat = settingsData.defaultVat ? parseFloat(settingsData.defaultVat.toString()).toFixed(2) : "0.00";
+    
+    // Use the user's ID as the document ID for settings
+    const docRef = doc(db, COLLECTIONS.settings, userId);
+    
+    // Try to get the existing document
+    const docSnap = await getDoc(docRef);
+    
+    if (!docSnap.exists()) {
+      // Create new settings
+      await setDoc(docRef, {
+        ...settingsData,
+        defaultVat,
+        userId,
+        updatedAt: serverTimestamp()
+      });
+    } else {
+      // Update existing settings
+      await updateDoc(docRef, {
+        ...settingsData,
+        defaultVat,
+        updatedAt: serverTimestamp()
+      });
+    }
+    
+    // Get the updated document
+    const updatedDoc = await getDoc(docRef);
     const data = updatedDoc.data();
-    return {
-      id: updatedDoc.id,
-      ...data,
-      updatedAt: data?.updatedAt?.toDate()
-    } as Settings;
-  } else {
-    // Create new
-    const docRef = await addDoc(collection(db, COLLECTIONS.settings), {
-      ...settingsData,
-      userId,
-      updatedAt: serverTimestamp()
-    });
     
-    const settingsDoc = await getDoc(docRef);
-    const data = settingsDoc.data();
     return {
-      id: docRef.id,
-      ...data,
-      updatedAt: data?.updatedAt?.toDate()
+      id: 1,
+      companyName: data?.companyName || "Your Company",
+      companyAddress: data?.companyAddress || "123 Business Street\nCity, State 12345",
+      companyPhone: data?.companyPhone || "+1 (555) 123-4567",
+      companyEmail: data?.companyEmail || "",
+      invoicePrefix: data?.invoicePrefix || "INV-",
+      nextInvoiceNumber: data?.nextInvoiceNumber || 1,
+      defaultVat: data?.defaultVat || "0.00",
+      paymentTerms: data?.paymentTerms || 30,
+      updatedAt: data?.updatedAt?.toDate() || new Date()
     } as Settings;
+  } catch (error) {
+    console.error("Error in updateSettings:", error);
+    throw error;
   }
 };

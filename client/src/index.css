@@ -19,15 +19,15 @@
   --accent-foreground: var(--theme-primary, 222 100% 38%);
   --destructive: 0 84% 60%; /* #EF4444 */
   --destructive-foreground: 0 0% 100%; /* #FFFFFF */
-  --border: 0 0% 100% / 0.2; /* Semi-transparent border */
-  --input: 0 0% 100% / 0.6; /* Semi-transparent input */
+  --border: 240 5% 84%; /* #CBD5E1 */
+  --input: 240 5% 84%; /* #CBD5E1 */
   --ring: var(--theme-primary, 222 100% 38%);
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
-  --radius: 1rem; /* Increased for more rounded look */
+  --radius: 0.5rem;
   --sidebar-background: var(--background);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--theme-primary, 222 100% 38%);
@@ -174,7 +174,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-[hsl(var(--border))];
   }
 
   body {
